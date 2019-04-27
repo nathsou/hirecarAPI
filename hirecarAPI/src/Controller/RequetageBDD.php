@@ -10,6 +10,7 @@ namespace App\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Dotenv\Dotenv;
 
 class RequetageBDD extends AbstractController
 {
@@ -18,7 +19,9 @@ class RequetageBDD extends AbstractController
     protected $queryParameter;
 
     public function __construct(){
-        $this->bdd=new \PDO('mysql:host=mysql-lo07.alwaysdata.net;dbname=lo07_hirecar','lo07','4RO35sq!wAw9QruS$');
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(__DIR__.'/../../.env');
+        $this->bdd=new \PDO('mysql:host=mysql-lo07.alwaysdata.net;dbname=lo07_hirecar','lo07',$_ENV["DB_PASSWORD"]);
         $this->queryParameter=[];
     }
 
