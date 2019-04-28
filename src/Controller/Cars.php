@@ -62,7 +62,7 @@ class Cars extends RequetageBDD
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return $this->json(["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC), "query" => $this->query, "query parameter" => $this->queryParameter]);
+            return $this->json(["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
         } else {
             return $this->json(["error" => "data parameters are unavailable"]);
         }
