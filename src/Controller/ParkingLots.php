@@ -31,7 +31,7 @@ class ParkingLots extends RequetageBDD
         $this->query .= "AS countPlaceTaken,parking_lot_id FROM rent_parking_spot ";
         $this->query .= "GROUP BY parking_lot_id))";
         $this->query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
-        $this->query .= "WHERE (  1.852*60* SQRT(POW( (:long - parking_lot.lng)* COS ((parking_lot.lat + :lat)/2) ,2)+POW((parking_lot.lat - :lat),2))  < :radius) ";
+        $this->query .= "WHERE (1.852 * 60 * SQRT(POW((:long - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ";
         $center_lat = $request->query->get('center_lat');
         $center_lng = $request->query->get('center_lng');
         $radius = $request->query->get('radius');
@@ -57,7 +57,7 @@ class ParkingLots extends RequetageBDD
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return $this->json(['airports' => $prep->fetchAll(\PDO::FETCH_ASSOC),'query'=>$this->query]);
+            return $this->json(['airports' => $prep->fetchAll(\PDO::FETCH_ASSOC), 'query' => $this->query]);
         } else {
             return $this->json(['error' => 'les données fournies ne sont pas des nombres', "query" => $this->query, "data" => $this->queryParameter]);
         }
@@ -67,33 +67,35 @@ class ParkingLots extends RequetageBDD
      * @Route("/parking_lots",methods={"POST"})
      *  condition="context.getMethod() in ['POST']
      */
-    public function insertParkingLot(Request $request){
-        $this->query ="INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
-        $data= json_decode($request->getContent(),true);
-        $label=$data["label"];
-        $lat=$data["lat"];
-        $long=$data["long"];
-        $nb_places=$data["nb_places"];
-        $price_per_day=$data["price_per_day"];
-        $airport_id=$data["airport_id"];
-        if(isset($label)&&
-            isset($lat)&& is_numeric($lat)&&
-            isset($long)&&is_numeric($long)&&
-            isset($nb_places)&&is_numeric($nb_places)&&
-            isset($price_per_day)&&is_numeric($price_per_day)&&
-            isset($airport_id)&&is_numeric($airport_id)
-        ){
-            $prep=$this->bdd->prepare($this->query);
-            $prep->bindValue("label",$label);
-            $prep->bindValue("lat",$lat);
-            $prep->bindValue("lng",$long);
-            $prep->bindValue("nb_places",$nb_places);
-            $prep->bindValue("price_per_day",$price_per_day);
-            $prep->bindValue("airport_id",$airport_id);
+    public function insertParkingLot(Request $request)
+    {
+        $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
+        $data = json_decode($request->getContent(), true);
+        $label = $data["label"];
+        $lat = $data["lat"];
+        $long = $data["long"];
+        $nb_places = $data["nb_places"];
+        $price_per_day = $data["price_per_day"];
+        $airport_id = $data["airport_id"];
+        if (
+            isset($label) &&
+            isset($lat) && is_numeric($lat) &&
+            isset($long) && is_numeric($long) &&
+            isset($nb_places) && is_numeric($nb_places) &&
+            isset($price_per_day) && is_numeric($price_per_day) &&
+            isset($airport_id) && is_numeric($airport_id)
+        ) {
+            $prep = $this->bdd->prepare($this->query);
+            $prep->bindValue("label", $label);
+            $prep->bindValue("lat", $lat);
+            $prep->bindValue("lng", $long);
+            $prep->bindValue("nb_places", $nb_places);
+            $prep->bindValue("price_per_day", $price_per_day);
+            $prep->bindValue("airport_id", $airport_id);
             $prep->execute();
-            return $this->json(["etat"=>"ok"]);
+            return $this->json(["etat" => "ok"]);
         }
-        return $this->json(["etat"=>"error"]);
+        return $this->json(["etat" => "error"]);
     }
 
     private function selectByPrice($price)
@@ -145,5 +147,4 @@ class ParkingLots extends RequetageBDD
             $this->queryParameter["number_places"] = $nbPlace;
         }
     }
-
 }

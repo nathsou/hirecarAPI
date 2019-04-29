@@ -33,7 +33,7 @@ class Cars extends RequetageBDD
         $airport = $request->query->get("airportId");
         if ((isset($center_lat) && isset($center_lng) && isset($radius)) xor isset($airport)) {
             if (isset($center_lat) && isset($center_lng) && isset($radius) && is_numeric($center_lat) && is_numeric($center_lng) && is_numeric($radius)) {
-                $this->query .= "(POW((`lat`-:lat), 2) + POW((`lng`-:lng), 2)) < POW(:radius, 2) ";
+                $this->query .= "(1.852 * 60 * SQRT(POW((:lng - `lng`) * COS((`lat` + :lat) / 2), 2) + POW((`lat` - :lat), 2)) < :radius)";
                 $this->queryParameter["lat"] = $center_lat;
                 $this->queryParameter["lng"] = $center_lng;
                 $this->queryParameter["radius"] = $radius;
