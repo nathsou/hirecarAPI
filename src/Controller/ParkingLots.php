@@ -14,8 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonDecode;
 class ParkingLots extends RequetageBDD
 {
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
     }
 
@@ -24,8 +23,7 @@ class ParkingLots extends RequetageBDD
      * @Route("/parking_lots")
      *  condition="context.getMethod() in ['GET']
      */
-    public function get_parking_lots(Request $request)
-    {
+    public function get_parking_lots(Request $request){
         $this->query = "SELECT * FROM `parking_lot` ";
         $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id))";
         $this->query .= "AS countPlaceTaken,parking_lot_id FROM rent_parking_spot ";
@@ -57,9 +55,9 @@ class ParkingLots extends RequetageBDD
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return $this->json(['airports' => $prep->fetchAll(\PDO::FETCH_ASSOC), 'query' => $this->query]);
+            return $this->mediatypeConverteur($request,['airports' => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
         } else {
-            return $this->json(['error' => 'les données fournies ne sont pas des nombres', "query" => $this->query, "data" => $this->queryParameter]);
+            return $this->mediatypeConverteur($request,['error' => 'les données fournies ne sont pas des nombres']);
         }
     }
     /**
@@ -67,8 +65,7 @@ class ParkingLots extends RequetageBDD
      * @Route("/parking_lots",methods={"POST"})
      *  condition="context.getMethod() in ['POST']
      */
-    public function insertParkingLot(Request $request)
-    {
+    public function insertParkingLot(Request $request){
         $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
         $data = json_decode($request->getContent(), true);
         $label = $data["label"];
@@ -93,13 +90,12 @@ class ParkingLots extends RequetageBDD
             $prep->bindValue("price_per_day", $price_per_day);
             $prep->bindValue("airport_id", $airport_id);
             $prep->execute();
-            return $this->json(["etat" => "ok"]);
+            return $this->mediatypeConverteur($request,["etat" => "ok"]);
         }
-        return $this->json(["etat" => "error"]);
+        return $this->mediatypeConverteur($request,["etat" => "error"]);
     }
 
-    private function selectByPrice($price)
-    {
+    private function selectByPrice($price){
         if (isset($price["min"]) && is_numeric($price["min"])) {
             $this->query = $this->query . "AND price_per_day >= :min_price ";
             $this->queryParameter['min_price'] = $price["min"];
@@ -109,8 +105,7 @@ class ParkingLots extends RequetageBDD
             $this->queryParameter["max_price"] = $price["max"];
         }
     }
-    private function selecteByDate($date)
-    {
+    private function selecteByDate($date){
         $query = "AND parking_lot.id IN (SELECT parking_spot_id FROM rent_car WHERE ";
         $start = false;
         $has_change = false;
@@ -140,8 +135,7 @@ class ParkingLots extends RequetageBDD
             $this->query .= $query;
         }
     }
-    private function selectByNbplace($nbPlace)
-    {
+    private function selectByNbplace($nbPlace){
         if (isset($nbPlace) && is_numeric($nbPlace)) {
             $this->query .= " AND nb_places >= :number_places";
             $this->queryParameter["number_places"] = $nbPlace;

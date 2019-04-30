@@ -62,9 +62,9 @@ class Cars extends RequetageBDD
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return $this->json(["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
+            return $this->mediatypeConverteur($request,["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
         } else {
-            return $this->json(["error" => "data parameters are unavailable"]);
+            return $this->mediatypeConverteur($request,["error" => "data parameters are unavailable"]);
         }
     }
     private function selecteByDate($date)
@@ -105,7 +105,6 @@ class Cars extends RequetageBDD
             $this->queryParameter["gearBox"] = $gearBoxType;
         }
     }
-
     private function selectBynbplaces($nbPlaces)
     {
         if (isset($nbPlaces) && is_numeric($nbPlaces)) {
