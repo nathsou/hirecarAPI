@@ -1,7 +1,7 @@
 # hirecarAPI
 API set for the hirecar project : https://github.com/nathsou/hirecar
 -
-##pour choisir le type de sorti de l'api entrer type:
+## pour choisir le type de sorti de l'api entrer type:
 
 xml pour du xml 
 
