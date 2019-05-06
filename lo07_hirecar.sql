@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: Apr 29, 2019 at 03:41 PM
+-- Generation Time: May 06, 2019 at 11:02 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -122,23 +122,25 @@ CREATE TABLE `car` (
   `nb_doors` int(11) DEFAULT NULL,
   `owner_id` smallint(5) UNSIGNED DEFAULT NULL,
   `gearbox_id` smallint(5) UNSIGNED DEFAULT NULL,
-  `fuel_id` smallint(5) UNSIGNED DEFAULT NULL
+  `fuel_id` smallint(5) UNSIGNED DEFAULT NULL,
+  `price_per_day` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `car`
 --
 
-INSERT INTO `car` (`id`, `model`, `nb_places`, `nb_doors`, `owner_id`, `gearbox_id`, `fuel_id`) VALUES
-(1, 'Fiat 500', 5, 3, 10, 2, 1),
-(2, 'Renault Clio 4', 5, 5, 5, 2, 2),
-(3, 'Fiat Punto', 5, 5, 9, 2, 1),
-(5, 'Peugeot 207', 5, 3, 7, 2, 1),
-(6, 'Peugeot 407 ', 5, 4, 7, 1, 2),
-(7, 'Opel Meriva', 5, 5, 6, 2, 2),
-(8, 'Opel Astra', 5, 5, 4, 2, 2),
-(9, 'Renault Scenic 4', 5, 5, 3, 2, 2),
-(10, 'Renault Espace 5', 5, 5, 2, 1, 2);
+INSERT INTO `car` (`id`, `model`, `nb_places`, `nb_doors`, `owner_id`, `gearbox_id`, `fuel_id`, `price_per_day`) VALUES
+(1, 'Fiat 500', 5, 3, 10, 2, 1, NULL),
+(2, 'Renault Clio 4', 5, 5, 5, 2, 2, 10.5),
+(3, 'Fiat Punto', 5, 5, 9, 2, 1, NULL),
+(5, 'Peugeot 207', 5, 3, 7, 2, 1, NULL),
+(6, 'Peugeot 407 ', 5, 4, 7, 1, 2, NULL),
+(7, 'Opel Meriva', 5, 5, 6, 2, 2, NULL),
+(8, 'Opel Astra', 5, 5, 4, 2, 2, 12.5),
+(9, 'Renault Scenic 4', 5, 5, 3, 2, 2, NULL),
+(10, 'Renault Espace 5', 5, 5, 2, 1, 2, NULL),
+(11, 'Suzuki S Cross', 5, 5, 12, 2, 2, 9.5);
 
 -- --------------------------------------------------------
 
@@ -262,25 +264,27 @@ CREATE TABLE `user` (
   `lastname` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(10) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL
+  `password` char(64) DEFAULT NULL,
+  `admin` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`) VALUES
-(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', 'lecid'),
-(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', 'lecid'),
-(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', 'lecid'),
-(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', 'lecid'),
-(5, 'Lorenzo', 'Fournier', 'lorenzo.fournier@example.com', '0312365498', 'lecid'),
-(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', 'lecid'),
-(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', 'lecid'),
-(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', 'lecid'),
-(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', 'lecid'),
-(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', 'lecid'),
-(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', 'lecid');
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `admin`) VALUES
+(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 1),
+(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(5, 'Lorenzo', 'Fournier', 'lorenzo.fournier@example.com', '0312365498', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
+(12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0);
 
 --
 -- Indexes for dumped tables
@@ -356,7 +360,7 @@ ALTER TABLE `airport`
 -- AUTO_INCREMENT for table `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `fuel`
@@ -392,7 +396,7 @@ ALTER TABLE `rent_parking_spot`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables

@@ -22,7 +22,7 @@ class Cars extends RequetageBDD
 
     /**
      * cars
-     * @Route("/cars")
+     * @Route("/cars",methods={"GET"})
      *  condition="context.getMethod() in ['GET']
      */
     public function get_parking_lots(Request $request)
@@ -62,9 +62,9 @@ class Cars extends RequetageBDD
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return $this->mediatypeConverteur($request,["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
+            return $this->mediatypeConverteur($request, ["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)]);
         } else {
-            return $this->mediatypeConverteur($request,["error" => "data parameters are unavailable"]);
+            return $this->mediatypeConverteur($request, ["error" => "data parameters are unavailable"]);
         }
     }
     private function selecteByDate($date)
@@ -144,5 +144,106 @@ class Cars extends RequetageBDD
             $this->query = $this->query . "AND price_per_day< :max_price ";
             $this->queryParameter["max_price"] = $price["max"];
         }
+    }
+
+    /**
+     * cars
+     * @Route("/cars",methods={"POST"})
+     * condition="context.getMethod() in ['POST']
+     */
+    public function insertCar(Request $request)
+    {
+        $this->query = "INSERT INTO car (model, nb_places, nb_doors, owner_id, gearbox_id, fuel_id, price_per_day) VALUES (:model, :nb_places, :nb_doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
+
+        $data = json_decode($request->getContent(), true);
+        $model = $data["model"];
+        $nb_places = $data["nb_places"];
+        $nb_doors = $data["nb_doors"];
+        $owner_id = $data["owner_id"];
+        $gearbox_id = $data["gearbox_id"];
+        $fuel_id = $data["fuel_id"];
+        $price_per_day = $data["price_per_day"];
+        if (
+            isset($model)
+            && isset($nb_places) && is_numeric($nb_places)
+            && isset($nb_doors) && is_numeric($nb_doors)
+            && isset($owner_id) && is_numeric($owner_id)
+            && isset($gearbox_id) && is_numeric($gearbox_id)
+            && isset($fuel_id) && is_numeric($fuel_id)
+            && isset($price_per_day) && is_numeric($price_per_day)
+        ) {
+            $prep = $this->bdd->prepare($this->query);
+            $prep->bindValue("model", $model);
+            $prep->bindValue("nb_places", $nb_places);
+            $prep->bindValue("nb_doors", $nb_doors);
+            $prep->bindValue("owner_id", $owner_id);
+            $prep->bindValue("gearbox_id", $gearbox_id);
+            $prep->bindValue("fuel_id", $fuel_id);
+            $prep->bindValue("price_per_day", $price_per_day);
+            $prep->execute();
+            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+        }
+        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+    }
+
+    /**
+     * cars
+     * @Route("/cars/{id}",methods={"PUT"})
+     * condition="context.getMethod() in ['PUT']
+     */
+    public function updateCar(Request $request)
+    {
+        $this->query = "UPDATE car SET model = :model, nb_places = :nb_places, nb_doors = :nb_doors, gearbox_id = :gearbox_id, fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
+
+        $data = json_decode($request->getContent(), true);
+        $model = $data["model"];
+        $nb_places = $data["nb_places"];
+        $nb_doors = $data["nb_doors"];
+        $gearbox_id = $data["gearbox_id"];
+        $fuel_id = $data["fuel_id"];
+        $price_per_day = $data["price_per_day"];
+        $id = $request->get('id');
+        if (
+            isset($model)
+            && isset($nb_places) && is_numeric($nb_places)
+            && isset($nb_places) && is_numeric($nb_places)
+            && isset($nb_doors) && is_numeric($nb_doors)
+            && isset($gearbox_id) && is_numeric($gearbox_id)
+            && isset($fuel_id) && is_numeric($fuel_id)
+            && isset($price_per_day) && is_numeric($price_per_day)
+            && isset($id) && is_numeric($id)
+        ) {
+            $prep = $this->bdd->prepare($this->query);
+            $prep->bindValue("model", $model);
+            $prep->bindValue("nb_places", $nb_places);
+            $prep->bindValue("nb_doors", $nb_doors);
+            $prep->bindValue("gearbox_id", $gearbox_id);
+            $prep->bindValue("fuel_id", $fuel_id);
+            $prep->bindValue("price_per_day", $price_per_day);
+            $prep->bindValue("id", $id);
+            $prep->execute();
+            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+        }
+        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+    }
+
+    /**
+     * cars
+     * @Route("/cars/{id}",methods={"DELETE"})
+     * condition="context.getMethod() in ['DELETE']
+     */
+    public function deleteCar(Request $request)
+    {
+        $this->query = "DELETE FROM car WHERE id = :id";
+        $id = $request->get('id');
+        if (
+            isset($id) && is_numeric($id)
+        ) {
+            $prep = $this->bdd->prepare($this->query);
+            $prep->bindValue("id", $id);
+            $prep->execute();
+            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+        }
+        return $this->mediatypeConverteur($request, ["etat" => "error"]);
     }
 }
