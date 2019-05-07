@@ -34,10 +34,11 @@ function convertArrayToXML($array,$xml){
 
 class RequetageBDD extends AbstractController
 {
+    //TODO doit disparaitre
     protected $bdd;
     protected $query;
     protected $queryParameter;
-
+    //TODO doit disparaite
     public function __construct()
     {
         $dotenv = new Dotenv();
