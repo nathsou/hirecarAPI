@@ -5,7 +5,6 @@ namespace App\Entity;
 
 class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterface
 {
-
     public function getParkingLots($long, $radius, $lat, \Symfony\Component\HttpFoundation\Request $request)
     {
         $this->query = "SELECT * FROM `parking_lot` ";
@@ -36,7 +35,6 @@ class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterfa
         $prep->execute();
         return  $prep->fetchAll(\PDO::FETCH_ASSOC);
     }
-
     public function getInsertParkingLots($label, $lat, $long, $nbPlaces, $pricePerDay, $airportId)
     {
         $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
