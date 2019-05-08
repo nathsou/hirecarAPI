@@ -25,15 +25,20 @@ class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterfa
             "max" => $request->query->get('max_price')
         ]);
         $this->selectByNbplace($request->query->get("number_places"));
-        $queryTemp = "SELECT id, label, lat, lng, price_per_day, airport_id, parking_lot_id, (finalTable.nb_places-finalTable.countPlaceTaken) AS nb_places FROM ( ";
-        $queryTemp2 = " )AS finalTable ";
-        $this->query = $queryTemp . $this->query . $queryTemp2;
         $prep = $this->bdd->prepare($this->query);
         foreach ($this->queryParameter as $key => $value) {
             $prep->bindValue($key, $value);
         }
         $prep->execute();
-        return  $prep->fetchAll(\PDO::FETCH_ASSOC);
+        $parkingLot=$prep->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($parkingLot as $key=>$parking){
+            if (is_null($parking["countPlaceTaken"])){
+                $parkingLot[$key]["nb_places"]=(string)($parking["nb_places"]);
+            }else{
+                $parkingLot[$key]["nb_places"]=(string)($parking["nb_places"]-$parking["countPlaceTaken"]);
+            }
+        }
+        return  $parkingLot;
     }
     public function getInsertParkingLots($label, $lat, $long, $nbPlaces, $pricePerDay, $airportId)
     {
