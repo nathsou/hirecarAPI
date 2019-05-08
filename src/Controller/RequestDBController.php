@@ -16,23 +16,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 use SimpleXMLElement;
 
-function convertArrayToXML($array,$xml){
-    foreach ($array as $key=>$value){
-        if(is_array($value)){
-            if (!is_numeric($key)){
-                $xmlNode=$xml->addChild("$key");
-                convertArrayToXML($value,$xmlNode);
-            }else{
-                $xmlNode=$xml->addChild("element:$key");
-                convertArrayToXML($value,$xmlNode);
+function convertArrayToXML($array, $xml)
+{
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            if (!is_numeric($key)) {
+                $xmlNode = $xml->addChild("$key");
+                convertArrayToXML($value, $xmlNode);
+            } else {
+                $xmlNode = $xml->addChild("element:$key");
+                convertArrayToXML($value, $xmlNode);
             }
-        }else{
-            $xml->addChild("$key",htmlspecialchars("$value"));
+        } else {
+            $xml->addChild("$key", htmlspecialchars("$value"));
         }
     }
 }
 
-class RequetageBDD extends AbstractController
+class RequestDBController extends AbstractController
 {
     //TODO doit disparaitre
     protected $bdd;
@@ -47,12 +48,13 @@ class RequetageBDD extends AbstractController
         $this->queryParameter = [];
     }
 
-    protected function mediatypeConverteur(Request $request, $data){
-        $returnType=$request->query->get("type");
-        switch ($returnType){
+    protected function mediatypeConverteur(Request $request, $data)
+    {
+        $returnType = $request->query->get("type");
+        switch ($returnType) {
             case "xml":
-                $xml= new SimpleXMLElement("<?xml version=\"1.0\"?><user_info></user_info>");
-                convertArrayToXML($data,$xml);
+                $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><user_info></user_info>");
+                convertArrayToXML($data, $xml);
                 $response = new Response($xml->asXML());
                 $response->headers->set('Content-Type', 'application/XML');
                 return  $response;

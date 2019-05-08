@@ -6,9 +6,10 @@ namespace App\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
+class Car extends ConnectionDB implements CarInterface
 {
-    public function insertCarRequete($model, $nbPlaces, $nbDoors, $ownerId, $gearboxId, $fuelId, $pricePerDay){
+    public function insertCarRequest($model, $nbPlaces, $nbDoors, $ownerId, $gearboxId, $fuelId, $pricePerDay)
+    {
         $this->query = "INSERT INTO car (model, nb_places, nb_doors, owner_id, gearbox_id, fuel_id, price_per_day) VALUES (:model, :nb_places, :nb_doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
         $prep = $this->bdd->prepare($this->query);
         $prep->bindValue("model", $model);
@@ -20,7 +21,8 @@ class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
         $prep->bindValue("price_per_day", $pricePerDay);
         $prep->execute();
     }
-    public function updateCarRequete($model,$nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id){
+    public function updateCarRequest($model, $nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id)
+    {
         $this->query = "UPDATE car SET model = :model, nb_places = :nb_places, nb_doors = :nb_doors, gearbox_id = :gearbox_id, fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
         $prep = $this->bdd->prepare($this->query);
         $prep->bindValue("model", $model);
@@ -32,14 +34,14 @@ class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
         $prep->bindValue("id", $id);
         $prep->execute();
     }
-    public function deleteCarRequete($id)
+    public function deleteCarRequest($id)
     {
         $this->query = "DELETE FROM car WHERE id = :id";
         $prep = $this->bdd->prepare($this->query);
         $prep->bindValue("id", $id);
         $prep->execute();
     }
-    public function getParkingLotsRequete($center_lat,$center_lng,$radius,$airport,Request $request)
+    public function getCarsRequest($center_lat, $center_lng, $radius, $airport, Request $request)
     {
         $this->query = "SELECT * FROM `car` WHERE car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN (SELECT id FROM parking_lot WHERE ";
         if ((isset($center_lat) && isset($center_lng) && isset($radius)) xor isset($airport)) {
@@ -59,7 +61,7 @@ class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
                 "max" => $request->query->get('max_price')
             ]);
             $this->query .= "))";
-            $this->selecteByDate([
+            $this->selectByDate([
                 "start" => $request->query->get('start_date'),
                 "end" => $request->query->get('end_date')
             ]);
@@ -73,12 +75,12 @@ class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
                 $prep->bindValue($key, $value);
             }
             $prep->execute();
-            return [ "cars"=> $prep->fetchAll(\PDO::FETCH_ASSOC)];
-        } else{
-            return[["error" => "data parameters are unavailable"]];
+            return ["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)];
+        } else {
+            return [["error" => "data parameters are unavailable"]];
         }
     }
-    private function selecteByDate($date)
+    private function selectByDate($date)
     {
         $query = "AND car.id IN (SELECT car_id FROM rent_parking_spot WHERE ";
         $start = false;
@@ -156,5 +158,4 @@ class carsRequeteMYSQL extends RequeteMySQL implements carsRequeteInterface
             $this->queryParameter["max_price"] = $price["max"];
         }
     }
-
 }

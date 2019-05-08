@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class Users extends RequetageBDD
+class UserController extends RequestDBController
 {
     public function __construct()
     {
@@ -19,8 +20,6 @@ class Users extends RequetageBDD
      */
     public function insertUser(Request $request)
     {
-        $this->query = "INSERT INTO user (firstname, lastname, email, phone, password) VALUES (:firstname, :lastname, :email, :phone, :password)";
-
         $data = json_decode($request->getContent(), true);
         $firstname = $data["firstname"];
         $lastname = $data["lastname"];
@@ -34,13 +33,8 @@ class Users extends RequetageBDD
             && isset($phone)
             && isset($password)
         ) {
-            $prep = $this->bdd->prepare($this->query);
-            $prep->bindValue("firstname", $firstname);
-            $prep->bindValue("lastname", $lastname);
-            $prep->bindValue("email", $email);
-            $prep->bindValue("phone", $phone);
-            $prep->bindValue("password", $password);
-            $prep->execute();
+            $requestDB = new User();
+            $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
             return $this->mediatypeConverteur($request, ["etat" => "ok"]);
         }
         return $this->mediatypeConverteur($request, ["etat" => "error"]);
@@ -53,8 +47,6 @@ class Users extends RequetageBDD
      */
     public function updateUser(Request $request)
     {
-        $this->query = "UPDATE user SET firstname = :firstname, lastname = :lastname, email = :email, phone = :phone, password = :password WHERE id = :id";
-
         $data = json_decode($request->getContent(), true);
         $firstname = $data["firstname"];
         $lastname = $data["lastname"];
@@ -68,15 +60,10 @@ class Users extends RequetageBDD
             && isset($email)
             && isset($phone)
             && isset($password)
+            && isset($id) && is_numeric($id)
         ) {
-            $prep = $this->bdd->prepare($this->query);
-            $prep->bindValue("firstname", $firstname);
-            $prep->bindValue("lastname", $lastname);
-            $prep->bindValue("email", $email);
-            $prep->bindValue("phone", $phone);
-            $prep->bindValue("password", $password);
-            $prep->bindValue("id", $id);
-            $prep->execute();
+            $requestDB = new User();
+            $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $password, $id);
             return $this->mediatypeConverteur($request, ["etat" => "ok"]);
         }
         return $this->mediatypeConverteur($request, ["etat" => "error"]);

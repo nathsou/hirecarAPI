@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use Symfony\Component\Dotenv\Dotenv;
 
-class RequeteMySQL
+class ConnectionDB
 {
     protected $bdd;
     protected $query;

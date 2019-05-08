@@ -3,20 +3,21 @@
 
 namespace App\Entity;
 
-class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterface
+class ParkingLot extends ConnectionDB implements ParkingLotInterface
 {
-    public function getParkingLots($long, $radius, $lat, \Symfony\Component\HttpFoundation\Request $request)
+
+    public function getParkingLotsRequest($lng, $radius, $lat, \Symfony\Component\HttpFoundation\Request $request)
     {
         $this->query = "SELECT * FROM `parking_lot` ";
         $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id))";
         $this->query .= "AS countPlaceTaken,parking_lot_id FROM rent_parking_spot ";
         $this->query .= "GROUP BY parking_lot_id))";
         $this->query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
-        $this->query .= "WHERE (1.852 * 60 * SQRT(POW((:long - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ";
-        $this->queryParameter[':long'] = (float)$long;
+        $this->query .= "WHERE (1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ";
+        $this->queryParameter[':lng'] = (float)$lng;
         $this->queryParameter[':radius'] = (float)$radius;
         $this->queryParameter[':lat'] = (float)$lat;
-        $this->selecteByDate([
+        $this->selectByDate([
             "start" => $request->query->get('start_date'),
             "end" => $request->query->get('end_date')
         ]);
@@ -40,19 +41,22 @@ class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterfa
         }
         return  $parkingLot;
     }
-    public function getInsertParkingLots($label, $lat, $long, $nbPlaces, $pricePerDay, $airportId)
+
+    public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
     {
         $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
         $prep = $this->bdd->prepare($this->query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
-        $prep->bindValue("lng", $long);
+        $prep->bindValue("lng", $lng);
         $prep->bindValue("nb_places", $nbPlaces);
         $prep->bindValue("price_per_day", $pricePerDay);
         $prep->bindValue("airport_id", $airportId);
         $prep->execute();
     }
-    private function selectByPrice($price){
+
+    private function selectByPrice($price)
+    {
         if (isset($price["min"]) && is_numeric($price["min"])) {
             $this->query = $this->query . "AND price_per_day >= :min_price ";
             $this->queryParameter['min_price'] = $price["min"];
@@ -62,7 +66,9 @@ class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterfa
             $this->queryParameter["max_price"] = $price["max"];
         }
     }
-    private function selecteByDate($date){
+
+    private function selectByDate($date)
+    {
         $query = "AND parking_lot.id IN (SELECT parking_spot_id FROM rent_car WHERE ";
         $start = false;
         $has_change = false;
@@ -91,7 +97,9 @@ class ParkingLotsMYSQL extends RequeteMySQL implements ParkingLotsRequeteInterfa
             $this->query .= $query;
         }
     }
-    private function selectByNbplace($nbPlace){
+
+    private function selectByNbplace($nbPlace)
+    {
         if (isset($nbPlace) && is_numeric($nbPlace)) {
             $this->query .= " AND nb_places >= :number_places";
             $this->queryParameter["number_places"] = $nbPlace;
