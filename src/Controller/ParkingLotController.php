@@ -45,13 +45,22 @@ class ParkingLotController extends RequestDBController
     public function insertParkingLot(Request $request)
     {
 
-        $data = json_decode($request->getContent(), true);
-        $label = $data["label"];
-        $lat = $data["lat"];
-        $lng = $data["lng"];
-        $nb_places = $data["nb_places"];
-        $price_per_day = $data["price_per_day"];
-        $airport_id = $data["airport_id"];
+        $data = $this->mediatypeConvertiesseurInput($request);
+        if(
+            array_key_exists("label",$data)
+            &&array_key_exists("lat",$data)
+            &&array_key_exists("lng",$data)
+            &&array_key_exists("nb_places",$data)
+            &&array_key_exists("price_per_day",$data)
+            &&array_key_exists("airport_id",$data)
+        ){
+            $label = $data["label"];
+            $lat = $data["lat"];
+            $lng = $data["lng"];
+            $nb_places = $data["nb_places"];
+            $price_per_day = $data["price_per_day"];
+            $airport_id = $data["airport_id"];
+        }
         if (
             isset($label) &&
             isset($lat) && is_numeric($lat) &&

@@ -20,12 +20,20 @@ class UserController extends RequestDBController
      */
     public function insertUser(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $firstname = $data["firstname"];
-        $lastname = $data["lastname"];
-        $email = $data["email"];
-        $phone = $data["phone"];
-        $password = hash('sha256', $data["password"]);
+        $data = $this->mediatypeConvertiesseurInput($request);
+        if(
+            array_key_exists("firstname",$data)
+            &&array_key_exists("lastname",$data)
+            &&array_key_exists("email",$data)
+            &&array_key_exists("phone",$data)
+            &&array_key_exists("password",$data)
+        ){
+            $firstname = $data["firstname"];
+            $lastname = $data["lastname"];
+            $email = $data["email"];
+            $phone = $data["phone"];
+            $password = hash('sha256', $data["password"]);
+        }
         if (
             isset($firstname)
             && isset($lastname)
@@ -47,13 +55,21 @@ class UserController extends RequestDBController
      */
     public function updateUser(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $firstname = $data["firstname"];
-        $lastname = $data["lastname"];
-        $email = $data["email"];
-        $phone = $data["phone"];
-        $password = hash('sha256', $data["password"]);
-        $id = $request->get('id');
+        $data = $this->mediatypeConvertiesseurInput($request);
+        if(
+            array_key_exists("firstname",$data)
+            &&array_key_exists("lastname",$data)
+            &&array_key_exists("email",$data)
+            &&array_key_exists("phone",$data)
+            &&array_key_exists("password",$data)
+        ){
+            $firstname = $data["firstname"];
+            $lastname = $data["lastname"];
+            $email = $data["email"];
+            $phone = $data["phone"];
+            $password = hash('sha256', $data["password"]);
+            $id=$request->get("id");
+        }
         if (
             isset($firstname)
             && isset($lastname)
@@ -66,6 +82,6 @@ class UserController extends RequestDBController
             $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $password, $id);
             return $this->mediatypeConverteur($request, ["etat" => "ok"]);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+        return $this->mediatypeConverteur($request, ["etat" => "error","data"=>$data]);
     }
 }

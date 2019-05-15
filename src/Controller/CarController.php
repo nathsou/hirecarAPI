@@ -42,14 +42,24 @@ class CarController extends RequestDBController
      */
     public function insertCar(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $model = $data["model"];
-        $nb_places = $data["nb_places"];
-        $nb_doors = $data["nb_doors"];
-        $owner_id = $data["owner_id"];
-        $gearbox_id = $data["gearbox_id"];
-        $fuel_id = $data["fuel_id"];
-        $price_per_day = $data["price_per_day"];
+        $data =$this->mediatypeConvertiesseurInput($request);
+        if(
+            array_key_exists("model",$data)
+            &&array_key_exists("nb_places",$data)
+            &&array_key_exists("nb_doors",$data)
+            &&array_key_exists("owner_id",$data)
+            &&array_key_exists("gearbox_id",$data)
+            &&array_key_exists("fuel_id",$data)
+            &&array_key_exists("price_per_day",$data)
+        ){
+            $model = $data["model"];
+            $nb_places = $data["nb_places"];
+            $nb_doors = $data["nb_doors"];
+            $owner_id = $data["owner_id"];
+            $gearbox_id = $data["gearbox_id"];
+            $fuel_id = $data["fuel_id"];
+            $price_per_day = $data["price_per_day"];
+        }
         if (
             isset($model)
             && isset($nb_places) && is_numeric($nb_places)
@@ -74,12 +84,21 @@ class CarController extends RequestDBController
     public function updateCar(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $model = $data["model"];
-        $nb_places = $data["nb_places"];
-        $nb_doors = $data["nb_doors"];
-        $gearbox_id = $data["gearbox_id"];
-        $fuel_id = $data["fuel_id"];
-        $price_per_day = $data["price_per_day"];
+        if(
+            array_key_exists("model",$data)
+            &&array_key_exists("nb_places",$data)
+            &&array_key_exists("nb_doors",$data)
+            &&array_key_exists("gearbox_id",$data)
+            &&array_key_exists("fuel_id",$data)
+            &&array_key_exists("price_per_day",$data)
+        ){
+            $model = $data["model"];
+            $nb_places = $data["nb_places"];
+            $nb_doors = $data["nb_doors"];
+            $gearbox_id = $data["gearbox_id"];
+            $fuel_id = $data["fuel_id"];
+            $price_per_day = $data["price_per_day"];
+        }
         $id = $request->get('id');
         if (
             isset($model) &&
