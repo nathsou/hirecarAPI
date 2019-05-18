@@ -32,9 +32,9 @@ class ParkingLotController extends RequestDBController
         $radius = $request->query->get('radius');
         if (is_numeric($center_lat) && is_numeric($center_lng) && is_numeric($radius)) {
             $requestDB = new ParkingLot();
-            return $this->mediatypeConverteur($request, ['airports' => $requestDB->getParkingLotsRequest($center_lng, $radius, $center_lat, $request)]);
+            return $this->mediaTypeConverter($request, ['airports' => $requestDB->getParkingLotsRequest($center_lng, $radius, $center_lat, $request)]);
         } else {
-            return $this->mediatypeConverteur($request, ['error' => 'les données fournies ne sont pas des nombres']);
+            return $this->mediaTypeConverter($request, ['error' => 'les données fournies ne sont pas des nombres']);
         }
     }
     /**
@@ -46,14 +46,14 @@ class ParkingLotController extends RequestDBController
     {
 
         $data = $this->mediatypeConvertiesseurInput($request);
-        if(
-            array_key_exists("label",$data)
-            &&array_key_exists("lat",$data)
-            &&array_key_exists("lng",$data)
-            &&array_key_exists("nb_places",$data)
-            &&array_key_exists("price_per_day",$data)
-            &&array_key_exists("airport_id",$data)
-        ){
+        if (
+            array_key_exists("label", $data)
+            && array_key_exists("lat", $data)
+            && array_key_exists("lng", $data)
+            && array_key_exists("nb_places", $data)
+            && array_key_exists("price_per_day", $data)
+            && array_key_exists("airport_id", $data)
+        ) {
             $label = $data["label"];
             $lat = $data["lat"];
             $lng = $data["lng"];
@@ -71,8 +71,8 @@ class ParkingLotController extends RequestDBController
         ) {
             $requestDB = new ParkingLot();
             $requestDB->insertParkingLotRequest($label, $lat, $lng, $nb_places, $price_per_day, $airport_id);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+        return $this->mediaTypeConverter($request, ["etat" => "error"]);
     }
 }

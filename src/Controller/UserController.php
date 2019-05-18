@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends RequestDBController
 {
@@ -20,7 +21,8 @@ class UserController extends RequestDBController
      */
     public function insertUser(Request $request)
     {
-        $data = $this->mediatypeConvertiesseurInput($request);
+        $data = $this->inputMediaTypeConverter($request);
+
         if (
             array_key_exists("firstname", $data)
             && array_key_exists("lastname", $data)
@@ -33,19 +35,23 @@ class UserController extends RequestDBController
             $email = $data["email"];
             $phone = $data["phone"];
             $password = $data["password"];
+
+            if (
+                isset($firstname)
+                && isset($lastname)
+                && isset($email)
+                && isset($phone)
+                && isset($password)
+            ) {
+                $requestDB = new User();
+                $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
+                return $this->mediaTypeConverter($request);
+            }
+
+            return $this->mediaTypeConverter($request);
         }
-        if (
-            isset($firstname)
-            && isset($lastname)
-            && isset($email)
-            && isset($phone)
-            && isset($password)
-        ) {
-            $requestDB = new User();
-            $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
-        }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+
+        return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -56,6 +62,11 @@ class UserController extends RequestDBController
     public function updateUser(Request $request)
     {
         $data = $this->mediatypeConvertiesseurInput($request);
+
+        if (data === NULL) {
+            return $this->mediaTypeConverter($request, '', Response::HTTP_NO_CONTENT);
+        }
+
         if (
             array_key_exists("firstname", $data)
             && array_key_exists("lastname", $data)
@@ -67,10 +78,9 @@ class UserController extends RequestDBController
             $lastname = $data["lastname"];
             $email = $data["email"];
             $phone = $data["phone"];
-            $password = hash('sha256', $data["password"]);
+            $password = $data["password"];
             $id = $request->get("id");
-        }
-        if (
+        } else if (
             isset($firstname)
             && isset($lastname)
             && isset($email)
@@ -80,8 +90,9 @@ class UserController extends RequestDBController
         ) {
             $requestDB = new User();
             $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $password, $id);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error", "data" => $data]);
+
+        return new Response('', Response::HTTP_BAD_REQUEST);
     }
 }

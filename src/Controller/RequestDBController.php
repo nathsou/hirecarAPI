@@ -8,8 +8,6 @@
 
 namespace App\Controller;
 
-
-use PhpParser\Node\Expr\Array_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,8 +73,11 @@ class RequestDBController extends AbstractController
         $this->queryParameter = [];
     }
 
-    protected function mediatypeConverteur(Request $request, $data)
-    {
+    protected function mediaTypeConverter(
+        Request $request,
+        $data = NULL
+    ) {
+        //TODO: Handle multiple accept values (and choose the first one that matches)
         $returnType = $request->headers->get("accept");
         switch ($returnType) {
             case "application/XML":
@@ -85,40 +86,45 @@ class RequestDBController extends AbstractController
                 $response = new Response($xml->asXML());
                 $response->headers->set('Content-Type', 'application/XML');
                 return  $response;
+
             case "application/yaml":
                 $response = new Response(YAML::dump($data));
                 $response->headers->set('Content-Type', 'application/yaml');
                 return  $response;
+
+            case "application/json":
             default:
                 return $this->json($data);
         }
     }
 
-    protected function mediatypeConvertiesseurInput(Request $request){
-        $typeInput= $request->headers->get("content-type");
-        switch ($typeInput){
-            case "application/json":{
-                try{
-                    return  json_decode($request->getContent(), true);
-                }catch (\Exception $e){
-                    return ["error"=>$e->getMessage()];
+    protected function inputMediaTypeConverter(Request $request)
+    {
+        // ignore ;charset=UTF-8 etc..
+        $typeInput = explode(";", $request->headers->get("content-type"))[0];
+        switch ($typeInput) {
+            case "application/json": {
+                    try {
+                        return json_decode($request->getContent(), true);
+                    } catch (\Exception $e) {
+                        return ["error" => $e->getMessage()];
+                    }
                 }
-            }
-            case "application/yaml":{
-                try {
-                    return Yaml::parse($request->getContent());
-                } catch (\Exception $e) {
-                    return ["error" => $e->getMessage()];
+            case "application/yaml": {
+                    try {
+                        return Yaml::parse($request->getContent());
+                    } catch (\Exception $e) {
+                        return ["error" => $e->getMessage()];
+                    }
                 }
-            }
-            case "application/xml":{
-                try{
-                    $xml=simplexml_load_string($request->getContent());
-                    return  xmlToArray($xml)['document'];
-                }catch (\Exception $e){
-                    return ["error"=>$e->getMessage()];
+            case "application/xml": {
+                    try {
+                        $xml = simplexml_load_string($request->getContent());
+                        return  xmlToArray($xml)['document'];
+                    } catch (\Exception $e) {
+                        return ["error" => $e->getMessage()];
+                    }
                 }
-            }
         }
     }
 }

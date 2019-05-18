@@ -6,8 +6,6 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\RequestDBController;
 use Symfony\Component\HttpFoundation\Request;
-use Sample\PayPalClient;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use App\Entity\PayPalPayment;
 
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -37,6 +35,6 @@ class GetOrderPayPal extends RequestDBController
             //TODO complete the action when the paiement is accepted bisous
             return $this->json($response);
         }
-        return $this->mediatypeConverteur($request, ["error" => "given Paiment unvalidle"]);
+        return $this->mediaTypeConverter($request, ["error" => "given Paiment unvalidle"]);
     }
 }

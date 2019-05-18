@@ -32,7 +32,7 @@ class CarController extends RequestDBController
         $radius = $request->query->get("radius");
         $airport = $request->query->get("airportId");
         $requestDB = new Car();
-        return $this->mediatypeConverteur($request, $requestDB->getCarsRequest($center_lat, $center_lng, $radius, $airport, $request));
+        return $this->mediaTypeConverter($request, $requestDB->getCarsRequest($center_lat, $center_lng, $radius, $airport, $request));
     }
 
     /**
@@ -42,16 +42,16 @@ class CarController extends RequestDBController
      */
     public function insertCar(Request $request)
     {
-        $data =$this->mediatypeConvertiesseurInput($request);
-        if(
-            array_key_exists("model",$data)
-            &&array_key_exists("nb_places",$data)
-            &&array_key_exists("nb_doors",$data)
-            &&array_key_exists("owner_id",$data)
-            &&array_key_exists("gearbox_id",$data)
-            &&array_key_exists("fuel_id",$data)
-            &&array_key_exists("price_per_day",$data)
-        ){
+        $data = $this->mediatypeConvertiesseurInput($request);
+        if (
+            array_key_exists("model", $data)
+            && array_key_exists("nb_places", $data)
+            && array_key_exists("nb_doors", $data)
+            && array_key_exists("owner_id", $data)
+            && array_key_exists("gearbox_id", $data)
+            && array_key_exists("fuel_id", $data)
+            && array_key_exists("price_per_day", $data)
+        ) {
             $model = $data["model"];
             $nb_places = $data["nb_places"];
             $nb_doors = $data["nb_doors"];
@@ -71,9 +71,9 @@ class CarController extends RequestDBController
         ) {
             $requestDB = new Car();
             $requestDB->insertCarRequest($model, $nb_places, $nb_doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+        return $this->mediaTypeConverter($request, ["etat" => "error"]);
     }
 
     /**
@@ -84,14 +84,14 @@ class CarController extends RequestDBController
     public function updateCar(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        if(
-            array_key_exists("model",$data)
-            &&array_key_exists("nb_places",$data)
-            &&array_key_exists("nb_doors",$data)
-            &&array_key_exists("gearbox_id",$data)
-            &&array_key_exists("fuel_id",$data)
-            &&array_key_exists("price_per_day",$data)
-        ){
+        if (
+            array_key_exists("model", $data)
+            && array_key_exists("nb_places", $data)
+            && array_key_exists("nb_doors", $data)
+            && array_key_exists("gearbox_id", $data)
+            && array_key_exists("fuel_id", $data)
+            && array_key_exists("price_per_day", $data)
+        ) {
             $model = $data["model"];
             $nb_places = $data["nb_places"];
             $nb_doors = $data["nb_doors"];
@@ -112,9 +112,9 @@ class CarController extends RequestDBController
         ) {
             $requestData = new Car();
             $requestData->updateCarRequest($model, $nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+        return $this->mediaTypeConverter($request, ["etat" => "error"]);
     }
 
     /**
@@ -131,8 +131,8 @@ class CarController extends RequestDBController
         ) {
             $requestDB = new Car();
             $requestDB->deleteCarRequest($id);
-            return $this->mediatypeConverteur($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
-        return $this->mediatypeConverteur($request, ["etat" => "error"]);
+        return $this->mediaTypeConverter($request, ["etat" => "error"]);
     }
 }
