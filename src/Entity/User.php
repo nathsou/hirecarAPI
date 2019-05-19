@@ -8,7 +8,7 @@ class User implements UserInterface
     public function checkUserEmailRequest($email)
     {
         $db = SModel::getInstance();
-        $query = "SELECT id FROM user WHERE email = :email";
+        $query = "SELECT DISTINCT id FROM user WHERE email = :email";
         $prep = $db->prepare($query);
         $prep->bindValue("email", $email);
         $prep->execute();
@@ -39,5 +39,15 @@ class User implements UserInterface
         $prep->bindValue("password", $password);
         $prep->bindValue("id", $id);
         $prep->execute();
+    }
+    public function getUserHashRequest($email)
+    {
+        $db = SModel::getInstance();
+        $query = "SELECT password FROM user WHERE email = :email";
+        $prep = $db->prepare($query);
+        $prep->bindValue("email", $email);
+        $prep->execute();
+        $result = $prep->fetch();
+        return $result["password"];
     }
 }

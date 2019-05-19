@@ -35,11 +35,15 @@ class LoginController extends MediaTypeController
                 && isset($password)
             ) {
                 $requestDB = new User();
+                if ($requestDB->checkUserEmailRequest($email) === 1) {
+                    $hash = $requestDB->getUserHashRequest($email);
+                    return new Response('{"hashed_pwd" : "' . $hash . '"}', Response::HTTP_OK);
+                } else {
+                    return new Response('{"email_error" : "L\'email saisi n\'existe pas"}', Response::HTTP_BAD_REQUEST);
+                }
             }
-
             return $this->mediaTypeConverter($request);
         }
-
 
         return new Response('', Response::HTTP_BAD_REQUEST);
     }

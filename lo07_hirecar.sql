@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: May 06, 2019 at 11:02 PM
+-- Generation Time: May 19, 2019 at 11:24 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -140,7 +140,8 @@ INSERT INTO `car` (`id`, `model`, `nb_places`, `nb_doors`, `owner_id`, `gearbox_
 (8, 'Opel Astra', 5, 5, 4, 2, 2, 12.5),
 (9, 'Renault Scenic 4', 5, 5, 3, 2, 2, NULL),
 (10, 'Renault Espace 5', 5, 5, 2, 1, 2, NULL),
-(11, 'Suzuki S Cross', 5, 5, 12, 2, 2, 9.5);
+(11, 'Suzuki S Cross', 5, 5, 12, 2, 2, 9.5),
+(20, 'Fiat Punto Evo 2012', 5, 3, 1, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -204,9 +205,10 @@ CREATE TABLE `parking_lot` (
 --
 
 INSERT INTO `parking_lot` (`id`, `label`, `lat`, `lng`, `nb_places`, `price_per_day`, `airport_id`) VALUES
-(1, 'Aéroport Paris Charles de Gaulle - Terminal D1', 49.032, 2.31, 45, 12, 64),
-(2, 'Aéroport Paris Charles de Gaulle - Terminal E2', 49.031, 2.32, 25, 11, 64),
-(3, 'parking Charles de Gaule parc P1', 49.033, 2.35, 120, 19, 64);
+(1, 'Paris Charles de Gaulle - Terminal D1', 49.032, 2.31, 45, 12, 64),
+(2, 'Paris Charles de Gaulle - Terminal E2', 49.031, 2.32, 25, 11, 64),
+(4, 'Colmar-Houssen - Parking A1', 48.633, 7.2134, 80, 12, 32),
+(5, 'Colmar-Houssen - Parking B3', 48.632, 7.2133, 30, 12, 32);
 
 -- --------------------------------------------------------
 
@@ -273,18 +275,28 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `admin`) VALUES
-(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 1),
-(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(5, 'Lorenzo', 'Fournier', 'lorenzo.fournier@example.com', '0312365498', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0),
-(12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '3d86e775c8d2868bddb7d079ed5ccdd6407245a9969c161615d8e58c8fe0c452', 0);
+(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 1),
+(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(5, 'Lorenzo', 'Fournier', 'lorenzo.fournier@example.com', '0312365498', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(13, 'Nathalie', 'Zhang', 'nathalie.zhang@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 1),
+(14, 'Elena', 'Thieu', 'elena.thieu@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(15, 'Guillaume', 'Gilles', 'guillaume.gilles@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(16, 'Michelle', 'Taylor', 'michelle.taylor@gmail.com', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(47, 'Marty', 'McFly', 'marty@delorean.com', '0123456789', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(49, 'Dark', 'Vador', 'dark.vador@utt.fr', '0523454342', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(67, 'Meline', 'Hong', 'meline.hong@utt.fr', '0325423456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(69, 'Tom', 'Olivier', 'tom.olivier@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(72, 'Myriam', 'Martin', 'myriam.martin@gmail.com', '0532423445', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(120, 'Ronald', 'Michel', 'ronald.michel@utt.fr', '0324534545', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
 
 --
 -- Indexes for dumped tables
@@ -344,7 +356,8 @@ ALTER TABLE `rent_parking_spot`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`) USING BTREE;
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -360,7 +373,7 @@ ALTER TABLE `airport`
 -- AUTO_INCREMENT for table `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `fuel`
@@ -378,7 +391,7 @@ ALTER TABLE `gearbox`
 -- AUTO_INCREMENT for table `parking_lot`
 --
 ALTER TABLE `parking_lot`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `rent_car`
@@ -396,7 +409,7 @@ ALTER TABLE `rent_parking_spot`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- Constraints for dumped tables
