@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ParkingLot extends ConnectionDB implements ParkingLotInterface
+class ParkingLot extends RequestBuilder implements ParkingLotInterface
 {
 
-    private $first_where_condition = true;
     private $valid_request = false;
 
     public function getParkingLotsRequest(Request $request)
     {
+        $db = SModel::getInstance();
         $this->query = "SELECT * FROM `parking_lot` ";
-        $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id))";
+        $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id)) ";
         $this->query .= "AS countPlaceTaken, parking_lot_id FROM rent_parking_spot ";
-        $this->query .= "GROUP BY parking_lot_id))";
+        $this->query .= "GROUP BY parking_lot_id)) ";
         $this->query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
 
         $this->selectByCoords(
@@ -41,37 +41,27 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
 
         $this->selectById($request->query->get("airport_id"));
 
-            $prep = $this->bdd->prepare($this->query);
+        if ($this->valid_request) {
+            $prep = $db->prepare($this->query);
 
-            foreach ($this->queryParameter as $key => $value) {
+            foreach ($this->query_parameters as $key => $value) {
                 $prep->bindValue($key, $value);
             }
 
             $prep->execute();
             $parkingLots = $prep->fetchAll(\PDO::FETCH_ASSOC);
 
-           //  var_dump($parkingLots);
+            return new JsonResponse(['airports' => $parkingLots], Response::HTTP_OK);
+        }
 
-            /*
-            foreach ($parkingLots as $key => $parking) {
-                if (is_null($parking["countPlaceTaken"])) {
-                    $parkingLots[$key]["nb_places"] = (string)($parking["nb_places"]);
-                } else {
-                    $parkingLots[$key]["nb_places"] = (string)($parking["nb_places"] - $parking["countPlaceTaken"]);
-                }
-            }
-            */
-
-            return new JsonResponse( ['airports' => $parkingLots], Response::HTTP_OK);
-
-
-       //  return new Response('', Response::HTTP_PARTIAL_CONTENT);
+       return new Response('', Response::HTTP_PARTIAL_CONTENT);
     }
 
     public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
     {
-        $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
-        $prep = $this->bdd->prepare($this->query);
+        $db = SModel::getInstance();
+        $query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
+        $prep = $db->prepare($query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
         $prep->bindValue("lng", $lng);
@@ -81,17 +71,6 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         $prep->execute();
     }
 
-    private function addWhereCondition(string $condition)
-    {
-        if ($this->first_where_condition) {
-            $this->first_where_condition = false;
-            $this->query .= " WHERE ";
-        } else {
-            $this->query .= " AND ";
-        }
-
-        $this->query .= $condition;
-    }
 
     private function selectByCoords($lat, $lng, $radius)
     {
@@ -101,9 +80,9 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         ) {
             $this->valid_request = true;
             $this->addWhereCondition("(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ");
-            $this->queryParameter[':lng'] = (float)$lng;
-            $this->queryParameter[':radius'] = (float)$radius;
-            $this->queryParameter[':lat'] = (float)$lat;
+            $this->query_parameters[':lng'] = (float)$lng;
+            $this->query_parameters[':radius'] = (float)$radius;
+            $this->query_parameters[':lat'] = (float)$lat;
         }
     }
 
@@ -112,13 +91,13 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         if (isset($price["min"]) && is_numeric($price["min"])) {
             $this->valid_request = true;
             $this->addWhereCondition("price_per_day >= :min_price ");
-            $this->queryParameter['min_price'] = $price["min"];
+            $this->query_parameters['min_price'] = $price["min"];
         }
 
         if (isset($price["max"]) && is_numeric($price["max"])) {
             $this->valid_request = true;
             $this->addWhereCondition("price_per_day<= :max_price ");
-            $this->queryParameter["max_price"] = $price["max"];
+            $this->query_parameters["max_price"] = $price["max"];
         }
     }
 
@@ -131,7 +110,7 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         if (isset($date["start"])) {
             try {
                 $Date2 = new \DateTime($date["start"]);
-                $this->queryParameter["start_date"] = $Date2->format("y-m-d");
+                $this->query_parameters["start_date"] = $Date2->format("y-m-d");
                 $condition .= "start_date >= :start_date";
                 $has_changed = true;
                 $start = true;
@@ -145,7 +124,7 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
                     $condition .= " AND ";
                 }
                 $condition .= "end_date <= :end_date";
-                $this->queryParameter["end_date"] = $date->format("y-m-d");
+                $this->query_parameters["end_date"] = $date->format("y-m-d");
                 $has_changed = true;
             } catch (\Exception $e) { }
         }
@@ -161,7 +140,7 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         if (isset($nbPlace) && is_numeric($nbPlace)) {
             $this->valid_request = true;
             $this->addWhereCondition("nb_places >= :number_places");
-            $this->queryParameter["number_places"] = $nbPlace;
+            $this->query_parameters["number_places"] = $nbPlace;
         }
     }
 
@@ -170,7 +149,7 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
             $this->addWhereCondition( "airport_id = :id");
-            $this->queryParameter["id"] = $id;
+            $this->query_parameters["id"] = $id;
         }
     }
 }

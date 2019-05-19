@@ -9,7 +9,6 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -59,20 +58,10 @@ function xmlToArray(SimpleXMLElement $xml): array
     ];
 }
 
-class RequestDBController extends AbstractController
+class MediaTypeController extends AbstractController
 {
-    //TODO doit disparaitre
-    protected $bdd;
-    protected $query;
-    protected $queryParameter;
-    //TODO doit disparaite
     public function __construct()
-    {
-        $dotenv = new Dotenv();
-        $dotenv->loadEnv(__DIR__ . '/../../.env');
-        $this->bdd = new \PDO($_ENV["DB_URI"], $_ENV["DB_USER"], $_ENV["DB_PASSWORD"]);
-        $this->queryParameter = [];
-    }
+    { }
 
     protected function mediaTypeConverter(
         Request $request,
