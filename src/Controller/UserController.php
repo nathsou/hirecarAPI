@@ -44,14 +44,12 @@ class UserController extends MediaTypeController
                 && isset($password)
             ) {
                 $requestDB = new User();
-                $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
-
-                // if ($requestDB->checkUserEmailRequest($email) === 0) {
-                //     $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
-                //     return $this->mediaTypeConverter($request);
-                // } else {
-                //     return new Response('{"email_error" : "L\'email est déjà utilisé par un autre utilisateur"}', Response::HTTP_CONFLICT);
-                // }
+                if ($requestDB->checkUserEmailRequest($email) === 0) {
+                    $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
+                    return $this->mediaTypeConverter($request);
+                } else {
+                    return new Response('{"email_error" : "L\'email est déjà utilisé par un autre utilisateur"}', Response::HTTP_CONFLICT);
+                }
             }
 
             return $this->mediaTypeConverter($request);
@@ -99,36 +97,6 @@ class UserController extends MediaTypeController
                 return $this->mediaTypeConverter($request);
             }
         }
-        return new Response('', Response::HTTP_BAD_REQUEST);
-    }
-
-    /**
-     * login
-     * @Route("/login",methods={"POST"})
-     * condition="context.getMethod() in ['POST']
-     */
-    public function getUserHash(Request $request)
-    {
-        $data = $this->inputMediaTypeConverter($request);
-
-        if (
-            array_key_exists("email", $data)
-            && array_key_exists("password", $data)
-        ) {
-            $email = $data["email"];
-            $password = $data["password"];
-
-            if (
-                isset($email)
-                && isset($password)
-            ) {
-                $requestDB = new User();
-            }
-
-            return $this->mediaTypeConverter($request);
-        }
-
-
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 }
