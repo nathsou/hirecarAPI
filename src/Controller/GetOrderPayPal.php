@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Controller\RequestDBController;
+use App\Controller\MediaTypeController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\PayPalPayment;
 
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 
-class GetOrderPayPal extends RequestDBController
+class GetOrderPayPal extends MediaTypeController
 {
     /**
      * verify_paiement

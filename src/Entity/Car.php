@@ -6,12 +6,13 @@ namespace App\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class Car extends ConnectionDB implements CarInterface
+class Car implements CarInterface
 {
     public function insertCarRequest($model, $nbPlaces, $nbDoors, $ownerId, $gearboxId, $fuelId, $pricePerDay)
     {
-        $this->query = "INSERT INTO car (model, nb_places, nb_doors, owner_id, gearbox_id, fuel_id, price_per_day) VALUES (:model, :nb_places, :nb_doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
-        $prep = $this->bdd->prepare($this->query);
+        $db = SModel::getInstance();
+        $query = "INSERT INTO car (model, nb_places, nb_doors, owner_id, gearbox_id, fuel_id, price_per_day) VALUES (:model, :nb_places, :nb_doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
+        $prep = $db->prepare($query);
         $prep->bindValue("model", $model);
         $prep->bindValue("nb_places", $nbPlaces);
         $prep->bindValue("nb_doors", $nbDoors);
@@ -23,8 +24,9 @@ class Car extends ConnectionDB implements CarInterface
     }
     public function updateCarRequest($model, $nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id)
     {
-        $this->query = "UPDATE car SET model = :model, nb_places = :nb_places, nb_doors = :nb_doors, gearbox_id = :gearbox_id, fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
-        $prep = $this->bdd->prepare($this->query);
+        $db = SModel::getInstance();
+        $query = "UPDATE car SET model = :model, nb_places = :nb_places, nb_doors = :nb_doors, gearbox_id = :gearbox_id, fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
+        $prep = $db->prepare($query);
         $prep->bindValue("model", $model);
         $prep->bindValue("nb_places", $nb_places);
         $prep->bindValue("nb_doors", $nb_doors);
@@ -36,23 +38,25 @@ class Car extends ConnectionDB implements CarInterface
     }
     public function deleteCarRequest($id)
     {
-        $this->query = "DELETE FROM car WHERE id = :id";
-        $prep = $this->bdd->prepare($this->query);
+        $db = SModel::getInstance();
+        $query = "DELETE FROM car WHERE id = :id";
+        $prep = $db->prepare($query);
         $prep->bindValue("id", $id);
         $prep->execute();
     }
     public function getCarsRequest($center_lat, $center_lng, $radius, $airport, Request $request)
     {
-        $this->query = "SELECT * FROM `car` WHERE car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN (SELECT id FROM parking_lot WHERE ";
+        $db = SModel::getInstance();
+        $query = "SELECT * FROM `car` WHERE car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN (SELECT id FROM parking_lot WHERE ";
         if ((isset($center_lat) && isset($center_lng) && isset($radius)) xor isset($airport)) {
             if (isset($center_lat) && isset($center_lng) && isset($radius) && is_numeric($center_lat) && is_numeric($center_lng) && is_numeric($radius)) {
-                $this->query .= "(1.852 * 60 * SQRT(POW((:lng - `lng`) * COS((`lat` + :lat) / 2), 2) + POW((`lat` - :lat), 2)) < :radius)";
-                $this->queryParameter["lat"] = $center_lat;
-                $this->queryParameter["lng"] = $center_lng;
-                $this->queryParameter["radius"] = $radius;
+                $query .= "(1.852 * 60 * SQRT(POW((:lng - `lng`) * COS((`lat` + :lat) / 2), 2) + POW((`lat` - :lat), 2)) < :radius)";
+                $queryParameter["lat"] = $center_lat;
+                $queryParameter["lng"] = $center_lng;
+                $queryParameter["radius"] = $radius;
             } elseif (is_numeric($airport)) {
-                $this->query .= "id = :airportID ";
-                $this->queryParameter["airportID"] = $airport;
+                $query .= "id = :airportID ";
+                $queryParameter["airportID"] = $airport;
             } else {
                 return ["error" => "data parameters are unavailable"];
             }
@@ -60,7 +64,7 @@ class Car extends ConnectionDB implements CarInterface
                 "min" => $request->query->get('min_price'),
                 "max" => $request->query->get('max_price')
             ]);
-            $this->query .= "))";
+            $query .= "))";
             $this->selectByDate([
                 "start" => $request->query->get('start_date'),
                 "end" => $request->query->get('end_date')
@@ -70,8 +74,8 @@ class Car extends ConnectionDB implements CarInterface
             $this->selectBynbporte($request->query->get("nb_doors"));
             $this->selectByFuel($request->query->get("fuel"));
             $this->selectByModel($request->query->get("model"));
-            $prep = $this->bdd->prepare($this->query);
-            foreach ($this->queryParameter as $key => $value) {
+            $prep = $db->prepare($query);
+            foreach ($queryParameter as $key => $value) {
                 $prep->bindValue($key, $value);
             }
             $prep->execute();

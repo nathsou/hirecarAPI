@@ -12,7 +12,7 @@ use App\Entity\ParkingLot;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ParkingLotController extends RequestDBController
+class ParkingLotController extends MediaTypeController
 {
 
     public function __construct()
@@ -45,7 +45,7 @@ class ParkingLotController extends RequestDBController
     public function insertParkingLot(Request $request)
     {
 
-        $data = $this->mediatypeConvertiesseurInput($request);
+        $data = $this->inputMediaTypeConverter($request);
         if (
             array_key_exists("label", $data)
             && array_key_exists("lat", $data)
@@ -60,19 +60,20 @@ class ParkingLotController extends RequestDBController
             $nb_places = $data["nb_places"];
             $price_per_day = $data["price_per_day"];
             $airport_id = $data["airport_id"];
+            if (
+                isset($label) &&
+                isset($lat) && is_numeric($lat) &&
+                isset($lng) && is_numeric($lng) &&
+                isset($nb_places) && is_numeric($nb_places) &&
+                isset($price_per_day) && is_numeric($price_per_day) &&
+                isset($airport_id) && is_numeric($airport_id)
+            ) {
+                $requestDB = new ParkingLot();
+                $requestDB->insertParkingLotRequest($label, $lat, $lng, $nb_places, $price_per_day, $airport_id);
+                return $this->mediaTypeConverter($request, ["etat" => "ok"]);
+            }
         }
-        if (
-            isset($label) &&
-            isset($lat) && is_numeric($lat) &&
-            isset($lng) && is_numeric($lng) &&
-            isset($nb_places) && is_numeric($nb_places) &&
-            isset($price_per_day) && is_numeric($price_per_day) &&
-            isset($airport_id) && is_numeric($airport_id)
-        ) {
-            $requestDB = new ParkingLot();
-            $requestDB->insertParkingLotRequest($label, $lat, $lng, $nb_places, $price_per_day, $airport_id);
-            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
-        }
+
         return $this->mediaTypeConverter($request, ["etat" => "error"]);
     }
 }

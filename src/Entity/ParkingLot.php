@@ -3,20 +3,21 @@
 
 namespace App\Entity;
 
-class ParkingLot extends ConnectionDB implements ParkingLotInterface
+class ParkingLot implements ParkingLotInterface
 {
 
     public function getParkingLotsRequest($lng, $radius, $lat, \Symfony\Component\HttpFoundation\Request $request)
     {
-        $this->query = "SELECT * FROM `parking_lot` ";
-        $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id))";
-        $this->query .= "AS countPlaceTaken,parking_lot_id FROM rent_parking_spot ";
-        $this->query .= "GROUP BY parking_lot_id))";
-        $this->query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
-        $this->query .= "WHERE (1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ";
-        $this->queryParameter[':lng'] = (float)$lng;
-        $this->queryParameter[':radius'] = (float)$radius;
-        $this->queryParameter[':lat'] = (float)$lat;
+        $db = SModel::getInstance();
+        $query = "SELECT * FROM `parking_lot` ";
+        $query .= "LEFT JOIN ( (SELECT (count(parking_lot_id))";
+        $query .= "AS countPlaceTaken,parking_lot_id FROM rent_parking_spot ";
+        $query .= "GROUP BY parking_lot_id))";
+        $query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
+        $query .= "WHERE (1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ";
+        $queryParameter[':lng'] = (float)$lng;
+        $queryParameter[':radius'] = (float)$radius;
+        $queryParameter[':lat'] = (float)$lat;
         $this->selectByDate([
             "start" => $request->query->get('start_date'),
             "end" => $request->query->get('end_date')
@@ -26,17 +27,17 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
             "max" => $request->query->get('max_price')
         ]);
         $this->selectByNbplace($request->query->get("number_places"));
-        $prep = $this->bdd->prepare($this->query);
-        foreach ($this->queryParameter as $key => $value) {
+        $prep = $db->prepare($query);
+        foreach ($queryParameter as $key => $value) {
             $prep->bindValue($key, $value);
         }
         $prep->execute();
-        $parkingLot=$prep->fetchAll(\PDO::FETCH_ASSOC);
-        foreach ($parkingLot as $key=>$parking){
-            if (is_null($parking["countPlaceTaken"])){
-                $parkingLot[$key]["nb_places"]=(string)($parking["nb_places"]);
-            }else{
-                $parkingLot[$key]["nb_places"]=(string)($parking["nb_places"]-$parking["countPlaceTaken"]);
+        $parkingLot = $prep->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($parkingLot as $key => $parking) {
+            if (is_null($parking["countPlaceTaken"])) {
+                $parkingLot[$key]["nb_places"] = (string)($parking["nb_places"]);
+            } else {
+                $parkingLot[$key]["nb_places"] = (string)($parking["nb_places"] - $parking["countPlaceTaken"]);
             }
         }
         return  $parkingLot;
@@ -44,8 +45,9 @@ class ParkingLot extends ConnectionDB implements ParkingLotInterface
 
     public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
     {
-        $this->query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
-        $prep = $this->bdd->prepare($this->query);
+        $db = SModel::getInstance();
+        $query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
+        $prep = $db->prepare($query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
         $prep->bindValue("lng", $lng);
