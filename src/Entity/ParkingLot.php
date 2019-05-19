@@ -152,8 +152,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     {
         if (isset($name) && is_string($name)) {
             $this->valid_request = true;
-            $this->addWhereCondition("airport_id = (SELECT id FROM airport WHERE name = :name)");
-            $this->query_parameters["name"] = $name;
+            $this->addWhereCondition("airport_id = (SELECT id FROM airport WHERE LOWER(name) LIKE '%". strtolower($name) ."%')");
+            // $this->query_parameters["name"] = $name;
         }
     }
 }
