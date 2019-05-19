@@ -5,6 +5,16 @@ namespace App\Entity;
 
 class User implements UserInterface
 {
+    public function checkUserEmailRequest($email)
+    {
+        $db = SModel::getInstance();
+        $query = "SELECT id FROM user WHERE email = :email";
+        $prep = $db->prepare($query);
+        $prep->bindValue("email", $email);
+        $prep->execute();
+        $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
+        return count($result);
+    }
     public function insertUserRequest($firstname, $lastname, $email, $phone, $password)
     {
         $db = SModel::getInstance();
