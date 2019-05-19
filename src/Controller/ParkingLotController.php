@@ -15,11 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ParkingLotController extends MediaTypeController
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * parking_lots
      * @Route("/parking_lots",methods={"GET"})

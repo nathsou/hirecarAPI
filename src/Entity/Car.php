@@ -47,7 +47,6 @@ class Car extends RequestBuilder implements CarInterface
     }
     public function getCarsRequest($center_lat, $center_lng, $radius, $airport, Request $request)
     {
-        $db = SModel::getInstance();
         $this->query = "SELECT * FROM `car` WHERE car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN (SELECT id FROM parking_lot WHERE ";
         if ((isset($center_lat) && isset($center_lng) && isset($radius)) xor isset($airport)) {
             if (isset($center_lat) && isset($center_lng) && isset($radius) && is_numeric($center_lat) && is_numeric($center_lng) && is_numeric($radius)) {
@@ -75,13 +74,10 @@ class Car extends RequestBuilder implements CarInterface
             $this->selectBynbporte($request->query->get("nb_doors"));
             $this->selectByFuel($request->query->get("fuel"));
             $this->selectByModel($request->query->get("model"));
-            $prep = $db->prepare($this->query);
-            foreach ($this->query_parameters as $key => $value) {
-                $prep->bindValue($key, $value);
-            }
-            $prep->execute();
 
-            return ["cars" => $prep->fetchAll(\PDO::FETCH_ASSOC)];
+            $cars = $this->execQuery();
+
+            return ["cars" => $cars];
         } else {
             return [["error" => "data parameters are unavailable"]];
         }

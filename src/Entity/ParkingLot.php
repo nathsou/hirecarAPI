@@ -14,7 +14,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
 
     public function getParkingLotsRequest(Request $request)
     {
-        $db = SModel::getInstance();
         $this->query = "SELECT * FROM `parking_lot` ";
         $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id)) ";
         $this->query .= "AS countPlaceTaken, parking_lot_id FROM rent_parking_spot ";
@@ -41,17 +40,13 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
 
         $this->selectById($request->query->get("airport_id"));
 
+        $this->selectByAirportName($request->get("airport_name"));
+
         if ($this->valid_request) {
-            $prep = $db->prepare($this->query);
 
-            foreach ($this->query_parameters as $key => $value) {
-                $prep->bindValue($key, $value);
-            }
+            $parking_lots = $this->execQuery();
 
-            $prep->execute();
-            $parkingLots = $prep->fetchAll(\PDO::FETCH_ASSOC);
-
-            return new JsonResponse(['airports' => $parkingLots], Response::HTTP_OK);
+            return new JsonResponse(['airports' =>$parking_lots], Response::HTTP_OK);
         }
 
        return new Response('', Response::HTTP_PARTIAL_CONTENT);
@@ -150,6 +145,15 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             $this->valid_request = true;
             $this->addWhereCondition( "airport_id = :id");
             $this->query_parameters["id"] = $id;
+        }
+    }
+
+    private function selectByAirportName($name)
+    {
+        if (isset($name) && is_string($name)) {
+            $this->valid_request = true;
+            $this->addWhereCondition("airport_id = (SELECT id FROM airport WHERE name = :name)");
+            $this->query_parameters["name"] = $name;
         }
     }
 }

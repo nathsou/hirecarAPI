@@ -60,39 +60,39 @@ function xmlToArray(SimpleXMLElement $xml): array
 
 class MediaTypeController extends AbstractController
 {
-    public function __construct()
-    { }
 
     protected function mediaTypeConverter(
         Request $request,
         $data = NULL
     ) {
-        //TODO: Handle multiple accept values (and choose the first one that matches)
-        $returnType = $request->headers->get("accept");
-        switch ($returnType) {
-            case "application/XML":
-                $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><user_info></user_info>");
-                convertArrayToXML($data, $xml);
-                $response = new Response($xml->asXML());
-                $response->headers->set('Content-Type', 'application/XML');
-                return  $response;
+        foreach (explode(";", $request->headers->get("accept")) as $mime) {
+            switch ($mime) {
+                case "application/XML":
+                    $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><user_info></user_info>");
+                    convertArrayToXML($data, $xml);
+                    $response = new Response($xml->asXML());
+                    $response->headers->set('Content-Type', 'application/XML');
+                    return $response;
 
-            case "application/yaml":
-                $response = new Response(YAML::dump($data));
-                $response->headers->set('Content-Type', 'application/yaml');
-                return  $response;
+                case "application/yaml":
+                    $response = new Response(YAML::dump($data));
+                    $response->headers->set('Content-Type', 'application/yaml');
+                    return $response;
 
-            case "application/json":
-            default:
-                return $this->json($data);
+                case "application/json":
+                    return $this->json($data);
+            }
         }
+        // return json if nothing matches
+        return $this->json($data);
     }
 
     protected function inputMediaTypeConverter(Request $request)
     {
         // ignore ;charset=UTF-8 etc..
-        $typeInput = explode(";", $request->headers->get("content-type"))[0];
-        switch ($typeInput) {
+        $mime = explode(";", $request->headers->get("content-type"))[0];
+
+        switch ($mime) {
             case "application/json": {
                     try {
                         return json_decode($request->getContent(), true);

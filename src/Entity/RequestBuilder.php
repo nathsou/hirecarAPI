@@ -10,6 +10,19 @@ abstract class RequestBuilder
     protected $query = "";
     protected $query_parameters = [];
 
+    protected function execQuery()
+    {
+        $db = SModel::getInstance();
+        $prep = $db->prepare($this->query);
+
+        foreach ($this->query_parameters as $key => $value) {
+            $prep->bindValue($key, $value);
+        }
+
+        $prep->execute();
+        return $prep->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     protected function addWhereCondition(string $condition)
     {
         if ($this->first_where_condition) {
