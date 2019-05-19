@@ -4,11 +4,9 @@ namespace App\Controller;
 
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Controller\RequestDBController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\PayPalPayment;
 
-use Symfony\Component\Serializer\Encoder\JsonDecode;
 
 class GetOrderPayPal extends RequestDBController
 {
@@ -17,7 +15,7 @@ class GetOrderPayPal extends RequestDBController
      * @Route("/verify_paiement")
      * condition="context.getMethod() in ['POST']
      */
-    public function verify_paiement(Request $request)
+    public function verify_payment(Request $request)
     {
         $paypal = new PayPAlPayment();
         $dotenv = new Dotenv();

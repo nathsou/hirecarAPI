@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 use SimpleXMLElement;
 
+
 function convertArrayToXML($array, $xml)
 {
     foreach ($array as $key => $value) {

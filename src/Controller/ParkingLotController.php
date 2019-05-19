@@ -27,15 +27,8 @@ class ParkingLotController extends RequestDBController
      */
     public function getParkingLots(Request $request)
     {
-        $center_lat = $request->query->get('center_lat');
-        $center_lng = $request->query->get('center_lng');
-        $radius = $request->query->get('radius');
-        if (is_numeric($center_lat) && is_numeric($center_lng) && is_numeric($radius)) {
             $requestDB = new ParkingLot();
-            return $this->mediaTypeConverter($request, ['airports' => $requestDB->getParkingLotsRequest($center_lng, $radius, $center_lat, $request)]);
-        } else {
-            return $this->mediaTypeConverter($request, ['error' => 'les données fournies ne sont pas des nombres']);
-        }
+            return $this->mediaTypeConverter($request, ['airports' => $requestDB->getParkingLotsRequest($request)]);
     }
     /**
      * parking_lots
