@@ -40,14 +40,14 @@ class User implements UserInterface
         $prep->bindValue("id", $id);
         $prep->execute();
     }
-    public function getUserHashRequest($email)
+    public function getUserRequest($email)
     {
         $db = SModel::getInstance();
-        $query = "SELECT password FROM user WHERE email = :email";
+        $query = "SELECT firstname, lastname, password FROM user WHERE email = :email";
         $prep = $db->prepare($query);
         $prep->bindValue("email", $email);
         $prep->execute();
-        $result = $prep->fetch();
-        return $result["password"];
+        $result = $prep->fetch(\PDO::FETCH_ASSOC);
+        return $result;
     }
 }

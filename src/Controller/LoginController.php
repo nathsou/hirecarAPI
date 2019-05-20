@@ -36,8 +36,8 @@ class LoginController extends MediaTypeController
             ) {
                 $requestDB = new User();
                 if ($requestDB->checkUserEmailRequest($email) === 1) {
-                    $hash = $requestDB->getUserHashRequest($email);
-                    return new Response('{"hashed_pwd" : "' . $hash . '"}', Response::HTTP_OK);
+                    $user = $requestDB->getUserRequest($email);
+                    return new Response(json_encode($user), Response::HTTP_OK);
                 } else {
                     return new Response('{"email_error" : "L\'email saisi n\'existe pas"}', Response::HTTP_BAD_REQUEST);
                 }
