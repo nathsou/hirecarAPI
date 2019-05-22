@@ -31,8 +31,8 @@ class CarController extends MediaTypeController
         $center_lng = $request->query->get("center_lng");
         $radius = $request->query->get("radius");
         $airport = $request->query->get("airportId");
-        $requestDB = new Car();
-        return $this->mediaTypeConverter($request, $requestDB->getCarsRequest($center_lat, $center_lng, $radius, $airport, $request));
+        $car = new Car();
+        return $this->handleResponse($request, $car->getCarsRequest($center_lat, $center_lng, $radius, $airport, $request));
     }
 
     /**

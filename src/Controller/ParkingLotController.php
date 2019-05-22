@@ -23,7 +23,7 @@ class ParkingLotController extends MediaTypeController
     public function getParkingLots(Request $request)
     {
             $pl = new ParkingLot();
-            return $pl->getParkingLotsRequest($request);
+            return $this->handleResponse($request, $pl->getParkingLotsRequest($request));
     }
     /**
      * parking_lots
