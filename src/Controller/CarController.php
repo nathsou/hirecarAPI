@@ -27,12 +27,8 @@ class CarController extends MediaTypeController
      */
     public function getCar(Request $request)
     {
-        $center_lat = $request->query->get("center_lat");
-        $center_lng = $request->query->get("center_lng");
-        $radius = $request->query->get("radius");
-        $airport = $request->query->get("airportId");
         $car = new Car();
-        return $this->handleResponse($request, $car->getCarsRequest($center_lat, $center_lng, $radius, $airport, $request));
+        return $this->handleResponse($request, $car->getCarsRequest($request));
     }
 
     /**
@@ -46,31 +42,31 @@ class CarController extends MediaTypeController
 
         if (
             array_key_exists("model", $data)
-            && array_key_exists("nb_places", $data)
-            && array_key_exists("nb_doors", $data)
+            && array_key_exists("seats", $data)
+            && array_key_exists("doors", $data)
             && array_key_exists("owner_id", $data)
             && array_key_exists("gearbox_id", $data)
             && array_key_exists("fuel_id", $data)
             && array_key_exists("price_per_day", $data)
         ) {
             $model = $data["model"];
-            $nb_places = $data["nb_places"];
-            $nb_doors = $data["nb_doors"];
+            $seats = $data["seats"];
+            $doors = $data["doors"];
             $owner_id = $data["owner_id"];
             $gearbox_id = $data["gearbox_id"];
             $fuel_id = $data["fuel_id"];
             $price_per_day = $data["price_per_day"];
             if (
                 isset($model)
-                && isset($nb_places) && is_numeric($nb_places)
-                && isset($nb_doors) && is_numeric($nb_doors)
+                && isset($seats) && is_numeric($seats)
+                && isset($doors) && is_numeric($doors)
                 && isset($owner_id) && is_numeric($owner_id)
                 && isset($gearbox_id) && is_numeric($gearbox_id)
                 && isset($fuel_id) && is_numeric($fuel_id)
                 && isset($price_per_day) && is_numeric($price_per_day)
             ) {
                 $requestDB = new Car();
-                $requestDB->insertCarRequest($model, $nb_places, $nb_doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
+                $requestDB->insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
             }
             return $this->mediaTypeConverter($request);
         }
@@ -88,15 +84,15 @@ class CarController extends MediaTypeController
         $data = json_decode($request->getContent(), true);
         if (
             array_key_exists("model", $data)
-            && array_key_exists("nb_places", $data)
-            && array_key_exists("nb_doors", $data)
+            && array_key_exists("seats", $data)
+            && array_key_exists("doors", $data)
             && array_key_exists("gearbox_id", $data)
             && array_key_exists("fuel_id", $data)
             && array_key_exists("price_per_day", $data)
         ) {
             $model = $data["model"];
-            $nb_places = $data["nb_places"];
-            $nb_doors = $data["nb_doors"];
+            $seats = $data["seats"];
+            $doors = $data["doors"];
             $gearbox_id = $data["gearbox_id"];
             $fuel_id = $data["fuel_id"];
             $price_per_day = $data["price_per_day"];
@@ -104,16 +100,15 @@ class CarController extends MediaTypeController
         $id = $request->get('id');
         if (
             isset($model) &&
-            isset($nb_places) && is_numeric($nb_places) &&
-            isset($nb_places) && is_numeric($nb_places) &&
-            isset($nb_doors) && is_numeric($nb_doors) &&
+            isset($seats) && is_numeric($seats) &&
+            isset($doors) && is_numeric($doors) &&
             isset($gearbox_id) && is_numeric($gearbox_id) &&
             isset($fuel_id) && is_numeric($fuel_id) &&
             isset($price_per_day) && is_numeric($price_per_day) &&
             isset($id) && is_numeric($id)
         ) {
             $requestData = new Car();
-            $requestData->updateCarRequest($model, $nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id);
+            $requestData->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
             return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);

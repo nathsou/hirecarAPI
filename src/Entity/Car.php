@@ -10,30 +10,30 @@ use Symfony\Component\HttpFoundation\Response;
 class Car extends RequestBuilder implements CarInterface
 {
 
-    private $valid_request = false;
-
-    public function insertCarRequest($model, $nbPlaces, $nbDoors, $ownerId, $gearboxId, $fuelId, $pricePerDay)
+    public function insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day)
     {
         $db = SModel::getInstance();
-        $this->query = "INSERT INTO car (model, nb_places, nb_doors, owner_id, gearbox_id, fuel_id, price_per_day) VALUES (:model, :nb_places, :nb_doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
+        $this->query = "INSERT INTO car (model, seats, doors, owner_id, gearbox_id, fuel_id, price_per_day)
+            VALUES (:model, :seats, :doors, :owner_id, :gearbox_id, :fuel_id, :price_per_day)";
         $prep = $db->prepare($this->query);
         $prep->bindValue("model", $model);
-        $prep->bindValue("nb_places", $nbPlaces);
-        $prep->bindValue("nb_doors", $nbDoors);
-        $prep->bindValue("owner_id", $ownerId);
-        $prep->bindValue("gearbox_id", $gearboxId);
-        $prep->bindValue("fuel_id", $fuelId);
-        $prep->bindValue("price_per_day", $pricePerDay);
+        $prep->bindValue("seats", $seats);
+        $prep->bindValue("doors", $doors);
+        $prep->bindValue("owner_id", $owner_id);
+        $prep->bindValue("gearbox_id", $gearbox_id);
+        $prep->bindValue("fuel_id", $fuel_id);
+        $prep->bindValue("price_per_day", $price_per_day);
         $prep->execute();
     }
-    public function updateCarRequest($model, $nb_places, $nb_doors, $gearbox_id, $fuel_id, $price_per_day, $id)
+    public function updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id)
     {
         $db = SModel::getInstance();
-        $this->query = "UPDATE car SET model = :model, nb_places = :nb_places, nb_doors = :nb_doors, gearbox_id = :gearbox_id, fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
+        $this->query = "UPDATE car SET model = :model, seats = :seats, doors = :doors, gearbox_id = :gearbox_id,
+            fuel_id = :fuel_id, price_per_day = :price_per_day WHERE id = :id";
         $prep = $db->prepare($this->query);
         $prep->bindValue("model", $model);
-        $prep->bindValue("nb_places", $nb_places);
-        $prep->bindValue("nb_doors", $nb_doors);
+        $prep->bindValue("seats", $seats);
+        $prep->bindValue("doors", $doors);
         $prep->bindValue("gearbox_id", $gearbox_id);
         $prep->bindValue("fuel_id", $fuel_id);
         $prep->bindValue("price_per_day", $price_per_day);
@@ -48,7 +48,7 @@ class Car extends RequestBuilder implements CarInterface
         $prep->bindValue("id", $id);
         $prep->execute();
     }
-    public function getCarsRequest($center_lat, $center_lng, $radius, $airport, Request $request)
+    public function getCarsRequest(Request $request)
     {
         $this->query = "SELECT * FROM `car`";
 
@@ -70,8 +70,8 @@ class Car extends RequestBuilder implements CarInterface
 
         $this->selectById($request->query->get("id"));
         $this->selectByGearbox($request->query->get("gearbox"));
-        $this->selectBySeatsCount($request->query->get("seats_count"));
-        $this->selectByDoorsCount($request->query->get("doors_count"));
+        $this->selectBySeatsCount($request->query->get("min_seats"));
+        $this->selectByDoorsCount($request->query->get("min_doors"));
         $this->selectByFuel($request->query->get("fuel"));
         $this->selectByModel($request->query->get("model"));
         $this->selectByOwnerId($request->query->get("owner_id"));
@@ -79,7 +79,7 @@ class Car extends RequestBuilder implements CarInterface
         $this->selectByAirporId($request->get("airport_id"));
 
         if ($this->valid_request) {
-            $cars = $this->execQuery();
+            $cars = $this->fetchIdData($this->execQuery(), ["fuel", "gearbox"]);
 
             return ["cars" => $cars];
         }
@@ -137,10 +137,12 @@ class Car extends RequestBuilder implements CarInterface
             isset($lat) && isset($lng) && isset($radius) &&
             is_numeric($lat) && is_numeric($lng) && is_numeric($radius)
         ) {
-            $condition = 'car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN (SELECT id FROM parking_lot WHERE';
+            $condition = 'car.id IN (SELECT car_id FROM rent_parking_spot WHERE parking_lot_id IN
+                (SELECT id FROM parking_lot WHERE';
 
             $this->valid_request = true;
-            $condition .= '(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius))) ';
+            $condition .= '(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) +
+                POW((parking_lot.lat - :lat), 2)) < :radius))) ';
             $this->query_parameters[':lng'] = (float)$lng;
             $this->query_parameters[':radius'] = (float)$radius;
             $this->query_parameters[':lat'] = (float)$lat;
@@ -149,39 +151,39 @@ class Car extends RequestBuilder implements CarInterface
         }
     }
 
-    private function selectByGearbox($gearBoxType)
+    private function selectByGearbox($gearbox_id)
     {
-        if (isset($gearBoxType) && preg_match("/[a-z]*/", $gearBoxType)) {
+        if (isset($gearbox_id) && preg_match("/[a-z]*/", $gearbox_id)) {
             $this->valid_request = true;
-            $this->addWhereCondition("gearbox_id IN ( SELECT id FROM gearbox WHERE type = :gearBox)");
-            $this->query_parameters["gearBox"] = $gearBoxType;
+            $this->addWhereCondition("gearbox_id IN (SELECT id FROM gearbox WHERE type = :gearbox_id)");
+            $this->query_parameters["gearbox_id"] = $gearbox_id;
         }
     }
 
-    private function selectBySeatsCount($nbPlaces)
+    private function selectBySeatsCount($seats)
     {
-        if (isset($nbPlaces) && is_numeric($nbPlaces)) {
+        if (isset($seats) && is_numeric($seats)) {
             $this->valid_request = true;
-            $this->addWhereCondition("nb_places >= :nb_seats ");
-            $this->query_parameters["nb_seats"] = $nbPlaces;
+            $this->addWhereCondition("seats >= :seats ");
+            $this->query_parameters["seats"] = $seats;
         }
     }
 
-    private function selectByDoorsCount($nbPorte)
+    private function selectByDoorsCount($doors)
     {
-        if (isset($nbPorte) && is_numeric($nbPorte)) {
+        if (isset($doors) && is_numeric($doors)) {
             $this->valid_request = true;
-            $this->query .= "AND nb_places >= :nb_doors ";
-            $this->query_parameters["nb_doors"] = $nbPorte;
+            $this->addWhereCondition("doors >= :doors");
+            $this->query_parameters["doors"] = $doors;
         }
     }
 
-    private function selectByFuel($fuel)
+    private function selectByFuel($fuel_id)
     {
-        if (isset($fuel) && preg_match("/[a-z]*/", $fuel)) {
+        if (isset($fuel_id) && preg_match("/[a-z]*/", $fuel_id)) {
             $this->valid_request = true;
-            $this->addWhereCondition("fuel_id IN ( SELECT id FROM fuel WHERE type = :fuel) ");
-            $this->query_parameters["fuel"] = $fuel;
+            $this->addWhereCondition("fuel_id IN (SELECT id FROM fuel WHERE type = :fuel_id) ");
+            $this->query_parameters["fuel_id"] = $fuel_id;
         }
     }
 

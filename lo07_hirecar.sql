@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: May 19, 2019 at 11:24 PM
+-- Generation Time: May 23, 2019 at 04:57 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -118,8 +118,8 @@ INSERT INTO `airport` (`id`, `name`, `lat`, `lng`) VALUES
 CREATE TABLE `car` (
   `id` smallint(5) UNSIGNED NOT NULL,
   `model` varchar(50) DEFAULT NULL,
-  `nb_places` int(11) DEFAULT NULL,
-  `nb_doors` int(11) DEFAULT NULL,
+  `seats` int(11) DEFAULT NULL,
+  `doors` int(11) DEFAULT NULL,
   `owner_id` smallint(5) UNSIGNED DEFAULT NULL,
   `gearbox_id` smallint(5) UNSIGNED DEFAULT NULL,
   `fuel_id` smallint(5) UNSIGNED DEFAULT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE `car` (
 -- Dumping data for table `car`
 --
 
-INSERT INTO `car` (`id`, `model`, `nb_places`, `nb_doors`, `owner_id`, `gearbox_id`, `fuel_id`, `price_per_day`) VALUES
+INSERT INTO `car` (`id`, `model`, `seats`, `doors`, `owner_id`, `gearbox_id`, `fuel_id`, `price_per_day`) VALUES
 (1, 'Fiat 500', 5, 3, 10, 2, 1, NULL),
 (2, 'Renault Clio 4', 5, 5, 5, 2, 2, 10.5),
 (3, 'Fiat Punto', 5, 5, 9, 2, 1, NULL),
@@ -195,7 +195,7 @@ CREATE TABLE `parking_lot` (
   `label` varchar(60) DEFAULT NULL,
   `lat` float NOT NULL,
   `lng` float NOT NULL,
-  `nb_places` int(11) DEFAULT NULL,
+  `capacity` int(11) DEFAULT NULL,
   `price_per_day` int(11) DEFAULT NULL,
   `airport_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -204,11 +204,12 @@ CREATE TABLE `parking_lot` (
 -- Dumping data for table `parking_lot`
 --
 
-INSERT INTO `parking_lot` (`id`, `label`, `lat`, `lng`, `nb_places`, `price_per_day`, `airport_id`) VALUES
+INSERT INTO `parking_lot` (`id`, `label`, `lat`, `lng`, `capacity`, `price_per_day`, `airport_id`) VALUES
 (1, 'Paris Charles de Gaulle - Terminal D1', 49.032, 2.31, 45, 12, 64),
 (2, 'Paris Charles de Gaulle - Terminal E2', 49.031, 2.32, 25, 11, 64),
 (4, 'Colmar-Houssen - Parking A1', 48.633, 7.2134, 80, 12, 32),
-(5, 'Colmar-Houssen - Parking B3', 48.632, 7.2133, 30, 12, 32);
+(5, 'Colmar-Houssen - Parking B3', 48.632, 7.2133, 30, 12, 32),
+(8, 'Paris Charles de Gaulle - Terminal D3', 49.0036, 2.3255, 64, 13, 64);
 
 -- --------------------------------------------------------
 
@@ -287,7 +288,7 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`,
 (10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(13, 'Nathalie', 'Zhang', 'nathalie.zhang@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 1),
+(13, 'Nathalours', 'La Chipours', 'nathalie.zhang@utt.fr', '0214343254', '$2a$10$5p/XjRv1Kw9OIqzg4t186eBMfo.3JXzZl4a9Fk9qZpC4MGwPzg.aq', 1),
 (14, 'Elena', 'Thieu', 'elena.thieu@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (15, 'Guillaume', 'Gilles', 'guillaume.gilles@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (16, 'Michelle', 'Taylor', 'michelle.taylor@gmail.com', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
@@ -296,7 +297,9 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`,
 (67, 'Meline', 'Hong', 'meline.hong@utt.fr', '0325423456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (69, 'Tom', 'Olivier', 'tom.olivier@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (72, 'Myriam', 'Martin', 'myriam.martin@gmail.com', '0532423445', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(120, 'Ronald', 'Michel', 'ronald.michel@utt.fr', '0324534545', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
+(120, 'Ronald', 'Michel', 'ronald.michel@utt.fr', '0324534545', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(123, 'guillaume', 'GILLES', 'gg.neo98@gmail.com', '0668035202', '$2a$10$5p/XjRv1Kw9OIqzg4t186eH2gY8.2Cyto2z6YdyNs45Vy5rmqKDQa', 0),
+(124, 'Emma', 'Richard', 'emma.richard@gmail.com', '0325345346', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
 
 --
 -- Indexes for dumped tables
@@ -391,7 +394,7 @@ ALTER TABLE `gearbox`
 -- AUTO_INCREMENT for table `parking_lot`
 --
 ALTER TABLE `parking_lot`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `rent_car`
@@ -409,7 +412,7 @@ ALTER TABLE `rent_parking_spot`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 
 --
 -- Constraints for dumped tables

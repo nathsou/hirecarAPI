@@ -9,15 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 class ParkingLot extends RequestBuilder implements ParkingLotInterface
 {
 
-    private $valid_request = false;
-
     public function getParkingLotsRequest(Request $request)
     {
-        $this->query = "SELECT * FROM `parking_lot` ";
-        $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id)) ";
-        $this->query .= "AS countPlaceTaken, parking_lot_id FROM rent_parking_spot ";
-        $this->query .= "GROUP BY parking_lot_id)) ";
-        $this->query .= "AS countTable on countTable.parking_lot_id=parking_lot.id ";
+        $this->query = "SELECT * FROM `parking_lot`";
+
+        // $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id)) ";
+        // $this->query .= "AS countPlaceTaken, parking_lot_id FROM rent_parking_spot ";
+        // $this->query .= "GROUP BY parking_lot_id)) ";
+        // $this->query .= "AS countTable on countTable.parking_lot_id=id ";
 
         $this->selectByCoords(
             $request->query->get('center_lat'),
@@ -43,9 +42,9 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
 
         if ($this->valid_request) {
 
-            $parking_lots = $this->execQuery();
+            $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
 
-            return ['airports' => $parking_lots];
+            return ['parking_lots' => $parking_lots];
         }
 
        return [
@@ -57,7 +56,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
     {
         $db = SModel::getInstance();
-        $query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id) VALUES  (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
+        $query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id)
+            VALUES (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
         $prep = $db->prepare($query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
@@ -76,7 +76,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             is_numeric($lat) && is_numeric($lng) && is_numeric($radius)
         ) {
             $this->valid_request = true;
-            $this->addWhereCondition("(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) * COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ");
+            $this->addWhereCondition("(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) *
+                COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ");
             $this->query_parameters[':lng'] = (float)$lng;
             $this->query_parameters[':radius'] = (float)$radius;
             $this->query_parameters[':lat'] = (float)$lat;
@@ -154,7 +155,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     {
         if (isset($name) && is_string($name)) {
             $this->valid_request = true;
-            $this->addWhereCondition("airport_id IN (SELECT id FROM airport WHERE LOWER(name) LIKE '%". strtolower($name) ."%')");
+            $this->addWhereCondition("airport_id IN (SELECT id FROM airport WHERE LOWER(name)
+                LIKE '%". strtolower($name) ."%')");
             // $this->query_parameters["airport_name"] = $name;
         }
     }
