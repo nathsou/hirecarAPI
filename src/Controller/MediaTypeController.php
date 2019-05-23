@@ -89,6 +89,17 @@ class MediaTypeController extends AbstractController
         return $this->json($data);
     }
 
+    protected function handleResponse($request, array $data) {
+        if (
+            array_key_exists("error_msg", $data) &&
+            array_key_exists( "error_status", $data)
+        ) {
+            return new Response($data["error_msg"], $data["error_status"]);
+        }
+
+        return $this->mediaTypeConverter($request, $data);
+    }
+
     protected function inputMediaTypeConverter(Request $request)
     {
         // ignore ;charset=UTF-8 etc..

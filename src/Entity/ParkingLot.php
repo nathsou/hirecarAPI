@@ -3,7 +3,6 @@
 
 namespace App\Entity;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,7 +35,7 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             "max" => $request->query->get('max_price')
         ]);
 
-        $this->selectByNbplace($request->query->get("number_places"));
+        $this->selectBySeats($request->query->get("number_places"));
 
         $this->selectById($request->query->get("airport_id"));
 
@@ -46,10 +45,13 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
 
             $parking_lots = $this->execQuery();
 
-            return new JsonResponse(['airports' =>$parking_lots], Response::HTTP_OK);
+            return ['airports' => $parking_lots];
         }
 
-       return new Response('', Response::HTTP_PARTIAL_CONTENT);
+       return [
+           "error_msg" => 'incorrect parameters',
+           "error_status" => Response::HTTP_BAD_REQUEST
+       ];
     }
 
     public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
@@ -130,12 +132,12 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         }
     }
 
-    private function selectByNbplace($nbPlace)
+    private function selectBySeats($seats)
     {
-        if (isset($nbPlace) && is_numeric($nbPlace)) {
+        if (isset($seats) && is_numeric($seats)) {
             $this->valid_request = true;
-            $this->addWhereCondition("nb_places >= :number_places");
-            $this->query_parameters["number_places"] = $nbPlace;
+            $this->addWhereCondition("nb_places >= :seats_count");
+            $this->query_parameters["seats_count"] = $seats;
         }
     }
 
@@ -152,8 +154,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     {
         if (isset($name) && is_string($name)) {
             $this->valid_request = true;
-            $this->addWhereCondition("airport_id = (SELECT id FROM airport WHERE LOWER(name) LIKE '%". strtolower($name) ."%')");
-            // $this->query_parameters["name"] = $name;
+            $this->addWhereCondition("airport_id IN (SELECT id FROM airport WHERE LOWER(name) LIKE '%". strtolower($name) ."%')");
+            // $this->query_parameters["airport_name"] = $name;
         }
     }
 }
