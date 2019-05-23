@@ -76,24 +76,24 @@ class UserController extends MediaTypeController
             && array_key_exists("lastname", $data)
             && array_key_exists("email", $data)
             && array_key_exists("phone", $data)
-            && array_key_exists("password", $data)
+            && array_key_exists("new_password", $data)
         ) {
             $firstname = $data["firstname"];
             $lastname = $data["lastname"];
             $email = $data["email"];
             $phone = $data["phone"];
-            $password = $data["password"];
+            $new_password = $data["new_password"];
             $id = $request->get("id");
             if (
-                isset($firstname)
-                && isset($lastname)
-                && isset($email)
-                && isset($phone)
-                && isset($password)
+                isset($firstname) && !empty($firstname)
+                && isset($lastname) && !empty($lastname)
+                && isset($email) && !empty($email)
+                && isset($phone) && !empty($phone)
+                && isset($new_password)
                 && isset($id) && is_numeric($id)
             ) {
                 $requestDB = new User();
-                $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $password, $id);
+                $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $new_password, $id);
                 return $this->mediaTypeConverter($request);
             }
         }
