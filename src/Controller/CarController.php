@@ -33,6 +33,17 @@ class CarController extends MediaTypeController
 
     /**
      * cars
+     * @Route("/cars/features",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getCarFeatures(Request $request)
+    {
+        $car = new Car();
+        return $this->handleResponse($request, $car->getCarFeaturesRequest($request));
+    }
+
+    /**
+     * cars
      * @Route("/cars",methods={"POST"})
      * condition="context.getMethod() in ['POST']
      */
@@ -65,8 +76,8 @@ class CarController extends MediaTypeController
                 && isset($fuel_id) && is_numeric($fuel_id)
                 && isset($price_per_day) && is_numeric($price_per_day)
             ) {
-                $requestDB = new Car();
-                $requestDB->insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
+                $car = new Car();
+                $car->insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
             }
             return $this->mediaTypeConverter($request);
         }
@@ -107,8 +118,8 @@ class CarController extends MediaTypeController
             isset($price_per_day) && is_numeric($price_per_day) &&
             isset($id) && is_numeric($id)
         ) {
-            $requestData = new Car();
-            $requestData->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
+            $car = new Car();
+            $car->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
             return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);
@@ -126,8 +137,8 @@ class CarController extends MediaTypeController
         if (
             isset($id) && is_numeric($id)
         ) {
-            $requestDB = new Car();
-            $requestDB->deleteCarRequest($id);
+            $car = new Car();
+            $car->deleteCarRequest($id);
             return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);

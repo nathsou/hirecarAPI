@@ -48,6 +48,22 @@ class Car extends RequestBuilder implements CarInterface
         $prep->bindValue("id", $id);
         $prep->execute();
     }
+    public function getCarFeaturesRequest()
+    {
+        $db = SModel::getInstance();
+
+        $this->query_gearbox = "SELECT * FROM gearbox";
+        $prep = $db->prepare($this->query_gearbox);
+        $prep->execute();
+        $gearbox = $prep->fetchAll(\PDO::FETCH_ASSOC);
+
+        $this->query_fuel = "SELECT * FROM fuel";
+        $prep = $db->prepare($this->query_fuel);
+        $prep->execute();
+        $fuel = $prep->fetchAll(\PDO::FETCH_ASSOC);
+
+        return ["gearbox" => $gearbox, "fuel" => $fuel];
+    }
     public function getCarsRequest(Request $request)
     {
         $this->query = "SELECT * FROM `car`";
@@ -126,7 +142,7 @@ class Car extends RequestBuilder implements CarInterface
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( "id = :id");
+            $this->addWhereCondition("id = :id");
             $this->query_parameters["id"] = $id;
         }
     }
