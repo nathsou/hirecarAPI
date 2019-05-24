@@ -34,10 +34,14 @@ class LoginController extends MediaTypeController
                 isset($email)
                 && isset($password)
             ) {
-                $requestDB = new User();
-                if ($requestDB->checkUserEmailRequest($email) === 1) {
-                    $user = $requestDB->getUserRequest($email);
-                    return new Response(json_encode($user), Response::HTTP_OK);
+                $user = new User();
+                if ($user->checkUserEmailRequest($email) === 1) {
+                    if ($user->checkUserPasswordRequest($email, $password)) {
+                        $user_data = $user->getUserRequest($email);
+                        return new Response(json_encode($user_data), Response::HTTP_OK);
+                    } else {
+                        return new Response('{"password_error" : "Le mot de passe saisi est incorrect"}', Response::HTTP_BAD_REQUEST);
+                    }
                 } else {
                     return new Response('{"email_error" : "L\'email saisi n\'existe pas"}', Response::HTTP_BAD_REQUEST);
                 }

@@ -15,6 +15,16 @@ class User implements UserInterface
         $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
         return count($result);
     }
+    public function checkUserPasswordRequest($email, $password)
+    {
+        $db = SModel::getInstance();
+        $query = "SELECT DISTINCT password FROM user WHERE email = :email";
+        $prep = $db->prepare($query);
+        $prep->bindValue("email", $email);
+        $prep->execute();
+        $retrieved_pwd = $prep->fetchAll(\PDO::FETCH_ASSOC)[0]["password"];
+        return $password === $retrieved_pwd ? true : false;
+    }
     public function insertUserRequest($firstname, $lastname, $email, $phone, $password)
     {
         $db = SModel::getInstance();
