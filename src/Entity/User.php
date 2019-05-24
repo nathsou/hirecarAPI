@@ -37,7 +37,7 @@ class User implements UserInterface
         $prep->bindValue("password", $password);
         $prep->execute();
     }
-    public function updateUserRequest($firstname, $lastname, $email, $phone, $new_password, $id)
+    public function updateUserRequest($firstname, $lastname, $email, $phone, $password, $new_password, $id)
     {
         $db = SModel::getInstance();
         if (empty($new_password)) {

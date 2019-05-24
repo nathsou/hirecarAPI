@@ -43,9 +43,9 @@ class UserController extends MediaTypeController
                 && isset($phone)
                 && isset($password)
             ) {
-                $requestDB = new User();
-                if ($requestDB->checkUserEmailRequest($email) === 0) {
-                    $requestDB->insertUserRequest($firstname, $lastname, $email, $phone, $password);
+                $user = new User();
+                if ($user->checkUserEmailRequest($email) === 0) {
+                    $user->insertUserRequest($firstname, $lastname, $email, $phone, $password);
                     return $this->mediaTypeConverter($request);
                 } else {
                     return new Response('{"email_error" : "L\'email est déjà utilisé par un autre utilisateur"}', Response::HTTP_CONFLICT);
@@ -76,12 +76,14 @@ class UserController extends MediaTypeController
             && array_key_exists("lastname", $data)
             && array_key_exists("email", $data)
             && array_key_exists("phone", $data)
+            && array_key_exists("password", $data)
             && array_key_exists("new_password", $data)
         ) {
             $firstname = $data["firstname"];
             $lastname = $data["lastname"];
             $email = $data["email"];
             $phone = $data["phone"];
+            $password = $data["password"];
             $new_password = $data["new_password"];
             $id = $request->get("id");
             if (
@@ -89,11 +91,18 @@ class UserController extends MediaTypeController
                 && isset($lastname) && !empty($lastname)
                 && isset($email) && !empty($email)
                 && isset($phone) && !empty($phone)
+                && isset($password)
                 && isset($new_password)
                 && isset($id) && is_numeric($id)
             ) {
-                $requestDB = new User();
-                $requestDB->updateUserRequest($firstname, $lastname, $email, $phone, $new_password, $id);
+                $user = new User();
+                if ($user->checkUserPasswordRequest($email, $password)) {
+                    $user->updateUserRequest($firstname, $lastname, $email, $phone, $password, $new_password, $id);
+                    return new Response('', Response::HTTP_OK);
+                } else {
+                    return new Response('{"password_error" : "Le mot de passe actuel saisi est incorrect"}', Response::HTTP_BAD_REQUEST);
+                }
+
                 return $this->mediaTypeConverter($request);
             }
         }
