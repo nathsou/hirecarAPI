@@ -20,7 +20,7 @@ class Airport extends RequestBuilder
             $this->addWhereCondition("LOWER(name) LIKE '%". strtolower($name). "%'");
             // $this->query_parameters["name"] = strtolower($name);
 
-            $this->query .= " ORDER BY name LIMIT 10";
+            $this->query .= " ORDER BY name"; // LIMIT 10
 
             $airports = $this->execQuery();
 
