@@ -7,5 +7,5 @@ use Symfony\Component\HttpFoundation\Request;
 interface ParkingLotInterface
 {
     public function getParkingLotsRequest(Request $request);
-    public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId);
+    public function insertParkingLotRequest($label, $lat, $lng, $capacity, $pricePerDay, $airportId);
 }

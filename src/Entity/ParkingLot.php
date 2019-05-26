@@ -53,21 +53,20 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
        ];
     }
 
-    public function insertParkingLotRequest($label, $lat, $lng, $nbPlaces, $pricePerDay, $airportId)
+    public function insertParkingLotRequest($label, $lat, $lng, $capacity, $pricePerDay, $airportId)
     {
         $db = SModel::getInstance();
-        $query = "INSERT INTO parking_lot (label,lat,lng,nb_places,price_per_day,airport_id)
+        $query = "INSERT INTO parking_lot (label,lat,lng,capacity,price_per_day,airport_id)
             VALUES (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
         $prep = $db->prepare($query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
         $prep->bindValue("lng", $lng);
-        $prep->bindValue("nb_places", $nbPlaces);
+        $prep->bindValue("capacity", $capacity);
         $prep->bindValue("price_per_day", $pricePerDay);
         $prep->bindValue("airport_id", $airportId);
         $prep->execute();
     }
-
 
     private function selectByCoords($lat, $lng, $radius)
     {
