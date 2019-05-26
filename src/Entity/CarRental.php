@@ -14,6 +14,11 @@ class CarRental extends RequestBuilder
     {
         $this->query = "SELECT * FROM rent_car";
 
+        $this->selectByDate(
+            $request->query->get("start_date"),
+            $request->query->get("end_date")
+        );
+
         $this->selectById($request->query->get("id"));
         $this->selectByAirportId($request->query->get("airport_id"));
         $this->selectByUserId($request->query->get("user_id"));
@@ -85,6 +90,28 @@ class CarRental extends RequestBuilder
             $this->addWhereCondition("id IN (SELECT rc.id FROM rent_car as rc, rent_parking_spot as s,
                 parking_lot as p, airport as a WHERE s.parking_lot_id = rc.parking_spot_id AND s.parking_lot_id = p.id
                 AND p.airport_id = a.id AND LOWER(a.name) LIKE '%". strtolower($name) ."%')");
+        }
+    }
+
+    private function selectByDate($start, $end)
+    {
+
+        if (isset($start) && is_string($start)){
+            try {
+                $Date2 = new \DateTime($start);
+                $this->query_parameters["start_date"] = $Date2->format("y-m-d H:i");
+                $this->addWhereCondition("start_date >= :start_date");
+                $this->valid_request = true;
+            } catch (\Exception $e) { }
+        }
+
+        if (isset($end) && is_string($end)) {
+            try {
+                $date = new \DateTime($end);
+                $this->addWhereCondition("end_date <= :end_date");
+                $this->query_parameters["end_date"] = $date->format("y-m-d H:i");
+                $this->valid_request = true;
+            } catch (\Exception $e) { }
         }
     }
 }
