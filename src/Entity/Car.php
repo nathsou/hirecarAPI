@@ -65,12 +65,10 @@ class Car extends RequestBuilder implements CarInterface
     }
     public function getUserCarsRequest($id)
     {
-        $db = SModel::getInstance();
-        $this->query = "SELECT car.id, model, seats, doors, gearbox.type as gearbox, fuel.type as fuel, price_per_day FROM car, gearbox, fuel WHERE owner_id = :id AND car.gearbox_id = gearbox.id AND car.fuel_id = fuel.id";
-        $prep = $db->prepare($this->query);
-        $prep->bindValue("id", $id);
-        $prep->execute();
-        $cars = $prep->fetchAll(\PDO::FETCH_ASSOC);
+        $this->query = "SELECT car.id, model, seats, doors, gearbox_id, fuel_id, price_per_day FROM car, gearbox, fuel WHERE owner_id = :id AND car.gearbox_id = gearbox.id AND car.fuel_id = fuel.id";
+
+        $this->query_parameters["id"] = $id;
+        $cars = $this->fetchIdData($this->execQuery(), ["fuel", "gearbox"]);
         return ["cars" => $cars];
     }
     public function getCarsRequest(Request $request)
