@@ -12,6 +12,7 @@ namespace App\Controller;
 use App\Entity\Car;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class CarController extends MediaTypeController
 {
@@ -97,7 +98,10 @@ class CarController extends MediaTypeController
                 && isset($price_per_day) && is_numeric($price_per_day)
             ) {
                 $car = new Car();
-                $car->insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day);
+                if ($car->insertCarRequest($model, $seats, $doors, $owner_id, $gearbox_id, $fuel_id, $price_per_day)) {
+                    $id = $car->selectInsertedCarIdRequest();
+                    return new Response('{"id": "' . $id . '"}', Response::HTTP_OK);
+                }
             }
             return $this->mediaTypeConverter($request);
         }
@@ -127,19 +131,19 @@ class CarController extends MediaTypeController
             $gearbox_id = $data["gearbox"]["id"];
             $fuel_id = $data["fuel"]["id"];
             $price_per_day = $data["price_per_day"];
-        }
-        $id = $request->get('id');
-        if (
-            isset($model) &&
-            isset($seats) && is_numeric($seats) &&
-            isset($doors) && is_numeric($doors) &&
-            isset($gearbox_id) && is_numeric($gearbox_id) &&
-            isset($fuel_id) && is_numeric($fuel_id) &&
-            isset($price_per_day) && is_numeric($price_per_day) &&
-            isset($id) && is_numeric($id)
-        ) {
-            $car = new Car();
-            $car->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
+            $id = $request->get('id');
+            if (
+                isset($model) &&
+                isset($seats) && is_numeric($seats) &&
+                isset($doors) && is_numeric($doors) &&
+                isset($gearbox_id) && is_numeric($gearbox_id) &&
+                isset($fuel_id) && is_numeric($fuel_id) &&
+                isset($price_per_day) && is_numeric($price_per_day) &&
+                isset($id) && is_numeric($id)
+            ) {
+                $car = new Car();
+                $car->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
+            }
             return $this->mediaTypeConverter($request, ["etat" => "ok"]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);
