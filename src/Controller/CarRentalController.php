@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Entity\Car;
 use App\Entity\CarRental;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +16,7 @@ class CarRentalController extends MediaTypeController
     }
 
     /**
-     * cars
+     * car_rentals
      * @Route("/car_rentals",methods={"GET"})
      *  condition="context.getMethod() in ['GET']
      */

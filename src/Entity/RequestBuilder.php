@@ -4,6 +4,8 @@
 namespace App\Entity;
 
 
+use Symfony\Component\HttpFoundation\Response;
+
 abstract class RequestBuilder
 {
     protected $first_where_condition = true;
@@ -21,7 +23,17 @@ abstract class RequestBuilder
         }
 
         $prep->execute();
-        return $prep->fetchAll(\PDO::FETCH_ASSOC);
+
+        if ($prep->errorCode() != "00000") {
+            return [
+              "error_msg" =>  "Incorrect SQL request: " . $prep->errorInfo()[2],
+                "error_status" => Response::HTTP_BAD_REQUEST
+            ];
+        }
+
+        $res = $prep->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $res;
     }
 
     protected function addWhereCondition(string $condition)

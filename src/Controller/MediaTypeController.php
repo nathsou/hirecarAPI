@@ -11,52 +11,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Yaml\Yaml;
-use SimpleXMLElement;
 
-
-function convertArrayToXML($array, $xml)
-{
-    foreach ($array as $key => $value) {
-        if (is_array($value)) {
-            if (!is_numeric($key)) {
-                $xmlNode = $xml->addChild("$key");
-                convertArrayToXML($value, $xmlNode);
-            } else {
-                $xmlNode = $xml->addChild("element:$key");
-                convertArrayToXML($value, $xmlNode);
-            }
-        } else {
-            $xml->addChild("$key", htmlspecialchars("$value"));
-        }
-    }
-}
-
-function xmlToArray(SimpleXMLElement $xml): array
-{
-    $parser = function (SimpleXMLElement $xml, array $collection = []) use (&$parser) {
-        $nodes = $xml->children();
-        if (0 === $nodes->count()) {
-            $collection['value'] = strval($xml);
-            return strval($xml);
-        }
-
-        foreach ($nodes as $nodeName => $nodeValue) {
-            if (count($nodeValue->xpath('../' . $nodeName)) < 2) {
-                $collection[$nodeName] = $parser($nodeValue);
-                continue;
-            }
-
-            $collection[$nodeName][] = $parser($nodeValue);
-        }
-
-        return $collection;
-    };
-
-    return [
-        $xml->getName() => $parser($xml)
-    ];
-}
 
 class MediaTypeController extends AbstractController
 {
@@ -67,13 +24,24 @@ class MediaTypeController extends AbstractController
         Request $request,
         $data = NULL
     ) {
-        foreach (explode(";", $request->headers->get("accept")) as $mime) {
+        $mimes =  explode(',',  explode(";", $request->headers->get("accept"))[0]);
+
+        foreach ($mimes as $mime) {
             switch ($mime) {
-                case "application/XML":
-                    $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><user_info></user_info>");
-                    convertArrayToXML($data, $xml);
-                    $response = new Response($xml->asXML());
-                    $response->headers->set('Content-Type', 'application/XML');
+                case "application/xml":
+                    $root_name = array_keys($data)[0];
+
+                    // if the array's name is in plural form
+                    if ($root_name[strlen($root_name) - 1] == 's') {
+                        $encoder = new XmlEncoder($root_name);
+                        $elems_name = substr($root_name, 0, strlen($root_name) - 1);
+                        $response = new Response($encoder->encode([$elems_name => $data[$root_name]], "xml"));
+                    } else {
+                        $encoder = new XmlEncoder(); // the root node is named 'response'
+                        $response = new Response($encoder->encode($data, "xml"));
+                    }
+
+                    $response->headers->set('Content-Type', 'application/xml');
                     return $response;
 
                 case "application/yaml":
@@ -122,8 +90,8 @@ class MediaTypeController extends AbstractController
                 }
             case "application/xml": {
                     try {
-                        $xml = simplexml_load_string($request->getContent());
-                        return  xmlToArray($xml)['document'];
+                        $encoder = new XmlEncoder();
+                        return $encoder->decode($request->getContent(), 'xml');
                     } catch (\Exception $e) {
                         return ["error" => $e->getMessage()];
                     }
