@@ -24,6 +24,13 @@ class Car extends RequestBuilder implements CarInterface
         $prep->bindValue("fuel_id", $fuel_id);
         $prep->bindValue("price_per_day", $price_per_day);
         $prep->execute();
+        return true;
+    }
+    public function selectInsertedCarIdRequest()
+    {
+        $this->query = "SELECT id FROM car WHERE id = (SELECT MAX(id) FROM car)";
+        $result = $this->execQuery();
+        return $result[0]["id"];
     }
     public function updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id)
     {
