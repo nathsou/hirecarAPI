@@ -32,4 +32,15 @@ class ParkingSpotRentalController extends MediaTypeController
 
         return $this->handleResponse($request, $res);
     }
+
+    /**
+     * parking_spot_rentals
+     * @Route("/parking_spot_rentals",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getParkingSpotRentals(Request $request)
+    {
+        $spot_rental = new ParkingSpotRental();
+        return $this->handleResponse($request, $spot_rental->getParkingSpotRentalsRequest($request));
+    }
 }

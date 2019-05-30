@@ -72,7 +72,7 @@ class Car extends RequestBuilder implements CarInterface
     }
     public function getUserCarsRequest($id)
     {
-        $this->query = "SELECT car.id, model, seats, doors, gearbox_id, fuel_id, price_per_day FROM car, gearbox, fuel WHERE owner_id = :id AND car.gearbox_id = gearbox.id AND car.fuel_id = fuel.id";
+        $this->query = "SELECT car.id, model, seats, doors, gearbox_id, fuel_id, owner_id, price_per_day FROM car, gearbox, fuel WHERE owner_id = :id AND car.gearbox_id = gearbox.id AND car.fuel_id = fuel.id";
 
         $this->query_parameters["id"] = $id;
         $cars = $this->fetchIdData($this->execQuery(), ["fuel", "gearbox"]);
