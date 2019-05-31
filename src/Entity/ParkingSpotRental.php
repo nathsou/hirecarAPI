@@ -150,4 +150,13 @@ class ParkingSpotRental extends RequestBuilder
             $this->addWhereCondition("id IN (SELECT s.id FROM rent_parking_spot as s, parking_lot as p, airport as a WHERE s.parking_lot_id = p.id AND p.airport_id = a.id AND LOWER(a.name) LIKE '%" . strtolower($name) . "%')");
         }
     }
+
+    public function deleteParkingSpotRentalRequest($id)
+    {
+        $db = SModel::getInstance();
+        $this->query = "DELETE FROM rent_parking_spot WHERE id = :id";
+        $prep = $db->prepare($this->query);
+        $prep->bindValue("id", $id);
+        $prep->execute();
+    }
 }

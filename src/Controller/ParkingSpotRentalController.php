@@ -43,4 +43,23 @@ class ParkingSpotRentalController extends MediaTypeController
         $spot_rental = new ParkingSpotRental();
         return $this->handleResponse($request, $spot_rental->getParkingSpotRentalsRequest($request));
     }
+
+    /**
+     * parking_spot_rentals
+     * @Route("/parking_spot_rentals/{id}",methods={"DELETE"})
+     * condition="context.getMethod() in ['DELETE']
+     */
+    public function deleteCar(Request $request)
+    {
+
+        $id = $request->get('id');
+        if (
+            isset($id) && is_numeric($id)
+        ) {
+            $spot_rental = new ParkingSpotRental();
+            $spot_rental->deleteParkingSpotRentalRequest($id);
+            return $this->mediaTypeConverter($request);
+        }
+        return new Response('', Response::HTTP_BAD_REQUEST);
+    }
 }
