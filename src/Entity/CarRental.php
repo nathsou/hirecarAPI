@@ -39,7 +39,7 @@ class CarRental extends RequestBuilder
         }
 
         return [
-          "error_msg" => "incorrect parameters",
+            "error_msg" => "incorrect parameters",
             "error_status" => Response::HTTP_BAD_REQUEST
         ];
     }
@@ -48,7 +48,7 @@ class CarRental extends RequestBuilder
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( "id = :id");
+            $this->addWhereCondition("id = :id");
             $this->query_parameters["id"] = $id;
         }
     }
@@ -57,7 +57,7 @@ class CarRental extends RequestBuilder
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( ":airport_id IN (SELECT p.airport_id FROM rent_parking_spot as s,
+            $this->addWhereCondition(":airport_id IN (SELECT p.airport_id FROM rent_parking_spot as s,
             parking_lot as p WHERE parking_spot_id = s.id AND s.parking_lot_id = p.id)");
             $this->query_parameters["airport_id"] = $id;
         }
@@ -67,7 +67,7 @@ class CarRental extends RequestBuilder
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( "user_id = :user_id");
+            $this->addWhereCondition("user_id = :user_id");
             $this->query_parameters["user_id"] = $id;
         }
     }
@@ -76,7 +76,7 @@ class CarRental extends RequestBuilder
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( ":owner_id IN (SELECT c.owner_id FROM rent_parking_spot as s,
+            $this->addWhereCondition(":owner_id IN (SELECT c.owner_id FROM rent_parking_spot as s,
             car as c WHERE s.id = parking_spot_id and c.id = s.car_id)");
             $this->query_parameters["owner_id"] = $id;
         }
@@ -89,14 +89,14 @@ class CarRental extends RequestBuilder
             $this->valid_request = true;
             $this->addWhereCondition("id IN (SELECT rc.id FROM rent_car as rc, rent_parking_spot as s,
                 parking_lot as p, airport as a WHERE s.parking_lot_id = rc.parking_spot_id AND s.parking_lot_id = p.id
-                AND p.airport_id = a.id AND LOWER(a.name) LIKE '%". strtolower($name) ."%')");
+                AND p.airport_id = a.id AND LOWER(a.name) LIKE '%" . strtolower($name) . "%')");
         }
     }
 
     private function selectByDate($start, $end)
     {
 
-        if (isset($start) && is_string($start)){
+        if (isset($start) && is_string($start)) {
             try {
                 $Date2 = new \DateTime($start);
                 $this->query_parameters["start_date"] = $Date2->format("y-m-d H:i");
@@ -113,5 +113,14 @@ class CarRental extends RequestBuilder
                 $this->valid_request = true;
             } catch (\Exception $e) { }
         }
+    }
+
+    public function deleteCarRentalRequest($id)
+    {
+        $db = SModel::getInstance();
+        $this->query = "DELETE FROM rent_car WHERE id = :id";
+        $prep = $db->prepare($this->query);
+        $prep->bindValue("id", $id);
+        $prep->execute();
     }
 }

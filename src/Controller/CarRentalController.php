@@ -25,4 +25,23 @@ class CarRentalController extends MediaTypeController
         $car_rental = new CarRental();
         return $this->handleResponse($request, $car_rental->getCarRentalsRequest($request));
     }
+
+    /**
+     * car_rentals
+     * @Route("/car_rentals/{id}",methods={"DELETE"})
+     * condition="context.getMethod() in ['DELETE']
+     */
+    public function deleteCarRental(Request $request)
+    {
+
+        $id = $request->get('id');
+        if (
+            isset($id) && is_numeric($id)
+        ) {
+            $car_rental = new CarRental();
+            $car_rental->deleteCarRentalRequest($id);
+            return $this->mediaTypeConverter($request);
+        }
+        return new Response('', Response::HTTP_BAD_REQUEST);
+    }
 }
