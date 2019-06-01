@@ -5,12 +5,13 @@ namespace App\Entity;
 
 class User implements UserInterface
 {
-    public function checkUserEmailRequest($email)
+    public function checkUserEmailRequest($email, $login_id)
     {
         $db = SModel::getInstance();
-        $query = "SELECT DISTINCT id FROM user WHERE email = :email";
+        $query = "SELECT DISTINCT id FROM user WHERE email = :email AND login_id = :login_id";
         $prep = $db->prepare($query);
         $prep->bindValue("email", $email);
+        $prep->bindValue("login_id", $login_id);
         $prep->execute();
         $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
         return count($result);
@@ -25,16 +26,18 @@ class User implements UserInterface
         $retrieved_pwd = $prep->fetchAll(\PDO::FETCH_ASSOC)[0]["password"];
         return $password === $retrieved_pwd ? true : false;
     }
-    public function insertUserRequest($firstname, $lastname, $email, $phone, $password)
+    public function insertUserRequest($args)
     {
         $db = SModel::getInstance();
-        $query = "INSERT INTO user (firstname, lastname, email, phone, password) VALUES (:firstname, :lastname, :email, :phone, :password)";
+        if ($args["login_id"] === 1) {
+            $query = "INSERT INTO user (firstname, lastname, email, phone, password, login_id) VALUES (:firstname, :lastname, :email, :phone, :password, :login_id)";
+        } else {
+            $query = "INSERT INTO user (firstname, lastname, email, login_id) VALUES (:firstname, :lastname, :email, :login_id)";
+        }
         $prep = $db->prepare($query);
-        $prep->bindValue("firstname", $firstname);
-        $prep->bindValue("lastname", $lastname);
-        $prep->bindValue("email", $email);
-        $prep->bindValue("phone", $phone);
-        $prep->bindValue("password", $password);
+        foreach ($args as $key => $value) {
+            $prep->bindValue($key, $value);
+        }
         $prep->execute();
     }
     public function updateUserRequest($firstname, $lastname, $email, $phone, $password, $new_password, $id)

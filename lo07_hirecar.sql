@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: Jun 01, 2019 at 01:19 PM
+-- Generation Time: Jun 01, 2019 at 09:24 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -132,7 +132,6 @@ CREATE TABLE `car` (
 
 INSERT INTO `car` (`id`, `model`, `seats`, `doors`, `owner_id`, `gearbox_id`, `fuel_id`, `price_per_day`) VALUES
 (1, 'Fiat 500', 5, 3, 10, 2, 1, 14),
-(2, 'Renault Clio 4', 5, 5, 5, 2, 2, 10.5),
 (3, 'Fiat Punto', 5, 5, 9, 2, 1, 10),
 (5, 'Peugeot 207', 5, 3, 7, 2, 1, 10),
 (6, 'Peugeot 407 ', 5, 4, 7, 1, 2, 10),
@@ -149,7 +148,8 @@ INSERT INTO `car` (`id`, `model`, `seats`, `doors`, `owner_id`, `gearbox_id`, `f
 (104, 'Pagani Huayra', 2, 2, 15, 2, 1, 300),
 (105, 'Tesla model S', 5, 5, 13, 1, 4, 130.99),
 (119, 'Tesla Model 3', 5, 5, 1, 1, 4, 199),
-(128, 'Citroën C3', 5, 5, 10, 2, 1, 8.5);
+(128, 'Citroën C3', 5, 5, 10, 2, 1, 8.5),
+(131, 'Citroën C2', 5, 3, 132, 2, 1, 8.55);
 
 -- --------------------------------------------------------
 
@@ -191,6 +191,25 @@ CREATE TABLE `gearbox` (
 INSERT INTO `gearbox` (`id`, `type`) VALUES
 (1, 'Automatique'),
 (2, 'Manuelle');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login`
+--
+
+CREATE TABLE `login` (
+  `id` int(11) NOT NULL,
+  `type` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `login`
+--
+
+INSERT INTO `login` (`id`, `type`) VALUES
+(1, 'Hirecar'),
+(2, 'Google');
 
 -- --------------------------------------------------------
 
@@ -238,7 +257,6 @@ CREATE TABLE `rent_car` (
 --
 
 INSERT INTO `rent_car` (`id`, `start_date`, `end_date`, `user_id`, `parking_spot_id`) VALUES
-(2, '2019-04-19 12:00:00', '2019-04-21 09:45:00', 4, 1),
 (3, '2019-05-31 00:00:00', '2019-06-02 00:00:00', 13, 24),
 (4, '2019-06-05 00:00:00', '2019-06-09 00:00:00', 13, 25);
 
@@ -261,13 +279,14 @@ CREATE TABLE `rent_parking_spot` (
 --
 
 INSERT INTO `rent_parking_spot` (`id`, `start_date`, `end_date`, `car_id`, `parking_lot_id`) VALUES
-(1, '2019-04-22 00:00:00', '2019-04-29 00:00:00', 2, 1),
 (24, '2019-05-30 00:00:00', '2019-06-07 00:00:00', 1, 2),
 (25, '2019-06-05 00:00:00', '2019-06-12 00:00:00', 1, 2),
 (35, '2019-06-01 08:00:00', '2019-06-14 12:30:00', 119, 5),
 (36, '2019-05-01 08:00:00', '2019-05-22 11:11:00', 20, 4),
 (37, '2019-05-01 06:30:00', '2019-05-23 11:20:00', 20, 4),
-(38, '2019-05-01 08:40:00', '2019-05-14 13:30:00', 119, 1);
+(38, '2019-05-01 08:40:00', '2019-05-14 13:30:00', 119, 1),
+(45, '2019-06-01 00:00:00', '2019-06-21 00:00:00', 20, 1),
+(46, '2019-06-02 10:00:00', '2019-06-12 10:00:00', 105, 5);
 
 -- --------------------------------------------------------
 
@@ -282,40 +301,34 @@ CREATE TABLE `user` (
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(10) DEFAULT NULL,
   `password` char(64) DEFAULT NULL,
-  `admin` tinyint(1) NOT NULL DEFAULT 0
+  `admin` tinyint(1) NOT NULL DEFAULT 0,
+  `login_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `admin`) VALUES
-(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '$2a$10$5p/XjRv1Kw9OIqzg4t186e8DTwDxMtppR.8l74idnbhB3IHBV.a86', 1),
-(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(5, 'Lorenzo', 'Fournier', 'lorenzo.fournier@example.com', '0312365498', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(13, 'Nathalours', 'La Chipours', 'nathalie.zhang@utt.fr', '0214343254', '$2a$10$5p/XjRv1Kw9OIqzg4t186eBMfo.3JXzZl4a9Fk9qZpC4MGwPzg.aq', 1),
-(14, 'Elena', 'Thieu', 'elena.thieu@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(15, 'Guillaume', 'Gilles', 'guillaume.gilles@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(16, 'Michelle', 'Taylor', 'michelle.taylor@gmail.com', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(47, 'Marty', 'McFly', 'marty@delorean.com', '0123456789', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(49, 'Dark', 'Vador', 'dark.vador@utt.fr', '0523454342', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(67, 'Meline', 'Hong', 'meline.hong@utt.fr', '0325423456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(69, 'Tom', 'Olivier', 'tom.olivier@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(72, 'Myriam', 'Martin', 'myriam.martin@gmail.com', '0532423445', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(120, 'Ronald', 'Michel', 'ronald.michel@utt.fr', '0324534545', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(123, 'guillaume', 'GILLES', 'gg.neo98@gmail.com', '0668035202', '$2a$10$5p/XjRv1Kw9OIqzg4t186eH2gY8.2Cyto2z6YdyNs45Vy5rmqKDQa', 0),
-(124, 'Emma', 'Richard', 'emma.richard@gmail.com', '0325345346', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(125, 'Olivia', 'Dupond', 'olivia.dupond@utt.fr', '0324353456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
-(129, 'Albert', 'Einstein', 'albert.einstein@utt.fr', '3141592653', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `admin`, `login_id`) VALUES
+(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '$2a$10$5p/XjRv1Kw9OIqzg4t186e8DTwDxMtppR.8l74idnbhB3IHBV.a86', 1, 1),
+(2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(6, 'Maëline', 'Berger', 'maëline.berger@example.com', '0382078547', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(7, 'Nora', 'Hubert', 'nora.hubert@example.com', '0317350181', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(8, 'Juliette', 'Colin', 'juliette.colin@example.com', '0576391830', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(9, 'Lucy', 'Schmitt', 'lucy.schmitt@example.com', '0426595951', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(10, 'Charline', 'Dumont', 'charline.dumont@example.com', '0511808598', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(11, 'Léonie', 'Giraud', 'léonie.giraud@example.com', '0185094248', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(12, 'Farah', 'Hadjoudj', 'farah.hadjoudj@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(13, 'Nathalie', 'La Chipours', 'nathalie.zhang@utt.fr', '0214343254', '$2a$10$5p/XjRv1Kw9OIqzg4t186eBMfo.3JXzZl4a9Fk9qZpC4MGwPzg.aq', 1, 1),
+(14, 'Elena', 'Thieu', 'elena.thieu@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(15, 'Guillaume', 'Gilles', 'guillaume.gilles@utt.fr', '0643546567', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(47, 'Marty', 'McFly', 'marty@delorean.com', '0123456789', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(49, 'Dark', 'Vador', 'dark.vador@utt.fr', '0523454342', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(125, 'Olivia', 'Dupond', 'olivia.dupond@utt.fr', '0324353456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(129, 'Albert', 'Einstein', 'albert.einstein@utt.fr', '3141592653', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(132, 'Nathalie', 'Zhang', 'mlle.zhang.nathalie@gmail.com', NULL, NULL, 0, 2);
 
 --
 -- Indexes for dumped tables
@@ -349,6 +362,12 @@ ALTER TABLE `gearbox`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `login`
+--
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `parking_lot`
 --
 ALTER TABLE `parking_lot`
@@ -376,7 +395,8 @@ ALTER TABLE `rent_parking_spot`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`) USING BTREE;
+  ADD UNIQUE KEY `email` (`email`) USING BTREE,
+  ADD KEY `login_id` (`login_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -392,7 +412,7 @@ ALTER TABLE `airport`
 -- AUTO_INCREMENT for table `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `fuel`
@@ -405,6 +425,12 @@ ALTER TABLE `fuel`
 --
 ALTER TABLE `gearbox`
   MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `login`
+--
+ALTER TABLE `login`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `parking_lot`
@@ -422,13 +448,13 @@ ALTER TABLE `rent_car`
 -- AUTO_INCREMENT for table `rent_parking_spot`
 --
 ALTER TABLE `rent_parking_spot`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- Constraints for dumped tables
@@ -461,6 +487,12 @@ ALTER TABLE `rent_car`
 ALTER TABLE `rent_parking_spot`
   ADD CONSTRAINT `fk_car_id` FOREIGN KEY (`car_id`) REFERENCES `car` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_parking_lot_id` FOREIGN KEY (`parking_lot_id`) REFERENCES `parking_lot` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `fk_login_id` FOREIGN KEY (`login_id`) REFERENCES `login` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -29,23 +29,33 @@ class UserController extends MediaTypeController
             && array_key_exists("email", $data)
             && array_key_exists("phone", $data)
             && array_key_exists("password", $data)
+            && array_key_exists("login", $data)
         ) {
             $firstname = $data["firstname"];
             $lastname = $data["lastname"];
             $email = $data["email"];
             $phone = $data["phone"];
             $password = $data["password"];
-
+            $login_id = $data["login"]["id"];
             if (
                 isset($firstname)
                 && isset($lastname)
                 && isset($email)
                 && isset($phone)
                 && isset($password)
+                && isset($login_id)
             ) {
                 $user = new User();
-                if ($user->checkUserEmailRequest($email) === 0) {
-                    $user->insertUserRequest($firstname, $lastname, $email, $phone, $password);
+                $args = array(
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                    "email" => $email,
+                    "phone" => $phone,
+                    "password" => $password,
+                    "login_id" => $login_id
+                );
+                if ($user->checkUserEmailRequest($email, $login_id) === 0) {
+                    $user->insertUserRequest($args);
                     return $this->mediaTypeConverter($request);
                 } else {
                     return new Response('{"email_error" : "L\'email est déjà utilisé par un autre utilisateur"}', Response::HTTP_CONFLICT);
