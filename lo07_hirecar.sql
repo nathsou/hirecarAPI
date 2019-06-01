@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: May 23, 2019 at 04:57 PM
+-- Generation Time: Jun 01, 2019 at 01:19 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -131,17 +131,25 @@ CREATE TABLE `car` (
 --
 
 INSERT INTO `car` (`id`, `model`, `seats`, `doors`, `owner_id`, `gearbox_id`, `fuel_id`, `price_per_day`) VALUES
-(1, 'Fiat 500', 5, 3, 10, 2, 1, NULL),
+(1, 'Fiat 500', 5, 3, 10, 2, 1, 14),
 (2, 'Renault Clio 4', 5, 5, 5, 2, 2, 10.5),
-(3, 'Fiat Punto', 5, 5, 9, 2, 1, NULL),
-(5, 'Peugeot 207', 5, 3, 7, 2, 1, NULL),
-(6, 'Peugeot 407 ', 5, 4, 7, 1, 2, NULL),
-(7, 'Opel Meriva', 5, 5, 6, 2, 2, NULL),
+(3, 'Fiat Punto', 5, 5, 9, 2, 1, 10),
+(5, 'Peugeot 207', 5, 3, 7, 2, 1, 10),
+(6, 'Peugeot 407 ', 5, 4, 7, 1, 2, 10),
+(7, 'Opel Meriva', 5, 5, 6, 2, 2, 10),
 (8, 'Opel Astra', 5, 5, 4, 2, 2, 12.5),
-(9, 'Renault Scenic 4', 5, 5, 3, 2, 2, NULL),
-(10, 'Renault Espace 5', 5, 5, 2, 1, 2, NULL),
+(9, 'Renault Scenic 4', 5, 5, 3, 2, 2, 10),
+(10, 'Renault Espace 5', 5, 5, 2, 1, 2, 10),
 (11, 'Suzuki S Cross', 5, 5, 12, 2, 2, 9.5),
-(20, 'Fiat Punto Evo 2012', 5, 3, 1, 2, 1, 1);
+(20, 'Fiat Punto Evo 2012', 1, 1, 1, 1, 1, 1),
+(22, 'Fiat 500', 5, 3, 13, 2, 1, 10.45),
+(35, 'Renault Clio 4', 5, 3, 13, 2, 1, 6.5),
+(67, 'Lamborghini Urus', 2, 3, 14, 1, 1, 40),
+(103, 'BMW Z4', 2, 2, 15, 2, 1, 300),
+(104, 'Pagani Huayra', 2, 2, 15, 2, 1, 300),
+(105, 'Tesla model S', 5, 5, 13, 1, 4, 130.99),
+(119, 'Tesla Model 3', 5, 5, 1, 1, 4, 199),
+(128, 'Citroën C3', 5, 5, 10, 2, 1, 8.5);
 
 -- --------------------------------------------------------
 
@@ -181,8 +189,8 @@ CREATE TABLE `gearbox` (
 --
 
 INSERT INTO `gearbox` (`id`, `type`) VALUES
-(1, 'automatique'),
-(2, 'manuelle');
+(1, 'Automatique'),
+(2, 'Manuelle');
 
 -- --------------------------------------------------------
 
@@ -219,8 +227,8 @@ INSERT INTO `parking_lot` (`id`, `label`, `lat`, `lng`, `capacity`, `price_per_d
 
 CREATE TABLE `rent_car` (
   `id` smallint(5) UNSIGNED NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
   `user_id` smallint(5) UNSIGNED DEFAULT NULL,
   `parking_spot_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -230,8 +238,9 @@ CREATE TABLE `rent_car` (
 --
 
 INSERT INTO `rent_car` (`id`, `start_date`, `end_date`, `user_id`, `parking_spot_id`) VALUES
-(1, '2019-04-28', '2019-04-29', 6, 2),
-(2, '2019-04-19', '2019-04-21', 4, 1);
+(2, '2019-04-19 12:00:00', '2019-04-21 09:45:00', 4, 1),
+(3, '2019-05-31 00:00:00', '2019-06-02 00:00:00', 13, 24),
+(4, '2019-06-05 00:00:00', '2019-06-09 00:00:00', 13, 25);
 
 -- --------------------------------------------------------
 
@@ -241,8 +250,8 @@ INSERT INTO `rent_car` (`id`, `start_date`, `end_date`, `user_id`, `parking_spot
 
 CREATE TABLE `rent_parking_spot` (
   `id` smallint(5) UNSIGNED NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
   `car_id` smallint(5) UNSIGNED DEFAULT NULL,
   `parking_lot_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -252,8 +261,13 @@ CREATE TABLE `rent_parking_spot` (
 --
 
 INSERT INTO `rent_parking_spot` (`id`, `start_date`, `end_date`, `car_id`, `parking_lot_id`) VALUES
-(1, '2019-04-22', '2019-04-29', 2, 1),
-(2, '2019-04-30', '2019-05-04', 8, 2);
+(1, '2019-04-22 00:00:00', '2019-04-29 00:00:00', 2, 1),
+(24, '2019-05-30 00:00:00', '2019-06-07 00:00:00', 1, 2),
+(25, '2019-06-05 00:00:00', '2019-06-12 00:00:00', 1, 2),
+(35, '2019-06-01 08:00:00', '2019-06-14 12:30:00', 119, 5),
+(36, '2019-05-01 08:00:00', '2019-05-22 11:11:00', 20, 4),
+(37, '2019-05-01 06:30:00', '2019-05-23 11:20:00', 20, 4),
+(38, '2019-05-01 08:40:00', '2019-05-14 13:30:00', 119, 1);
 
 -- --------------------------------------------------------
 
@@ -276,7 +290,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `admin`) VALUES
-(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 1),
+(1, 'Nathan', 'Soufflet', 'nathan.soufflet@utt.fr', '0643232423', '$2a$10$5p/XjRv1Kw9OIqzg4t186e8DTwDxMtppR.8l74idnbhB3IHBV.a86', 1),
 (2, 'Lison', 'Meyer', 'lison.meyer@example.com', '0570010553', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (3, 'Louison', 'Petit', 'louison.petit@example.com', '0570345942', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (4, 'Dorian', 'Bertrand', 'dorian.bertrand@example.com', '0368303035', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
@@ -299,7 +313,9 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`,
 (72, 'Myriam', 'Martin', 'myriam.martin@gmail.com', '0532423445', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (120, 'Ronald', 'Michel', 'ronald.michel@utt.fr', '0324534545', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
 (123, 'guillaume', 'GILLES', 'gg.neo98@gmail.com', '0668035202', '$2a$10$5p/XjRv1Kw9OIqzg4t186eH2gY8.2Cyto2z6YdyNs45Vy5rmqKDQa', 0),
-(124, 'Emma', 'Richard', 'emma.richard@gmail.com', '0325345346', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
+(124, 'Emma', 'Richard', 'emma.richard@gmail.com', '0325345346', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(125, 'Olivia', 'Dupond', 'olivia.dupond@utt.fr', '0324353456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0),
+(129, 'Albert', 'Einstein', 'albert.einstein@utt.fr', '3141592653', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0);
 
 --
 -- Indexes for dumped tables
@@ -376,7 +392,7 @@ ALTER TABLE `airport`
 -- AUTO_INCREMENT for table `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT for table `fuel`
@@ -400,19 +416,19 @@ ALTER TABLE `parking_lot`
 -- AUTO_INCREMENT for table `rent_car`
 --
 ALTER TABLE `rent_car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `rent_parking_spot`
 --
 ALTER TABLE `rent_parking_spot`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- Constraints for dumped tables

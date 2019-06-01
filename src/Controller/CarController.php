@@ -45,26 +45,6 @@ class CarController extends MediaTypeController
 
     /**
      * cars
-     * @Route("/cars/{id}",methods={"GET"})
-     *  condition="context.getMethod() in ['GET']
-     */
-
-    public function getUserCars(Request $request)
-    {
-        $id = $request->get('id');
-        if (
-            isset($id) && is_numeric($id)
-        ) {
-            $car = new Car();
-            $data = $car->getUserCarsRequest($id);
-            return $this->mediaTypeConverter($request, $data);
-        }
-        return new Response('', Response::HTTP_BAD_REQUEST);
-    }
-
-
-    /**
-     * cars
      * @Route("/cars",methods={"POST"})
      * condition="context.getMethod() in ['POST']
      */
