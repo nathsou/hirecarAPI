@@ -22,22 +22,24 @@ class LoginController extends MediaTypeController
     public function login(Request $request)
     {
         $data = $this->inputMediaTypeConverter($request);
+
         if (array_key_exists("login", $data)) {
             $login_type = $data["login"]["type"];
 
             switch ($login_type) {
                 case "Google":
-                    return $this->googleSignIn($request);
+                    return $this->socialMediaSignIn($request);
+                case "Facebook":
+                    return $this->socialMediaSignIn($request);
                 default:
                     return $this->getUserHash($request);
             }
         }
     }
 
-    public function googleSignIn(Request $request)
+    public function socialMediaSignIn(Request $request)
     {
         $data = $this->inputMediaTypeConverter($request);
-
         if (
             array_key_exists("email", $data)
             && array_key_exists("firstname", $data)
@@ -77,7 +79,6 @@ class LoginController extends MediaTypeController
 
     public function getUserHash(Request $request)
     {
-
         $data = $this->inputMediaTypeConverter($request);
 
         if (
