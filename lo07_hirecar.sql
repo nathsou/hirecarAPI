@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-lo07.alwaysdata.net
--- Generation Time: Jun 01, 2019 at 09:24 PM
+-- Generation Time: Jun 08, 2019 at 05:56 PM
 -- Server version: 10.2.22-MariaDB
 -- PHP Version: 7.2.9
 
@@ -40,74 +40,82 @@ CREATE TABLE `airport` (
 --
 
 INSERT INTO `airport` (`id`, `name`, `lat`, `lng`) VALUES
-(1, 'Agen-La-Garenne', 44.1012, 0.3523),
-(2, 'Ajaccio-Napoleon-Bonaparte', 41.5512, 8.48),
-(3, 'Albi-Le-Sequestre', 43.5435, 2.712),
-(5, 'Angouleme-Brie-Champniers', 45.4347, 0.1312),
-(6, 'Annecy-Meythet', 45.5547, 6.636),
-(7, 'Aurillac', 44.5359, 2.2511),
-(8, 'Auxerre-Branches', 47.4754, 3.341),
-(9, 'Avignon-Caumont', 43.5435, 4.54),
-(10, 'Bastia-Poretta', 42.3259, 9.2848),
-(11, 'Beauvais-Tille', 49.27, 2.635),
-(12, 'Bergerac-Roumaniere', 44.4912, 0.3112),
-(13, 'Beziers-Vias', 43.1912, 3.21),
-(16, 'Bourges', 47.336, 2.2247),
-(18, 'Brive-Vallee-De-Dordogne-', 45.0228, 1.2859),
-(20, 'Cahors-Lalbenque', 44.2653, 1.2628),
-(21, 'Calais-Dunkerque', 50.5652, 1.5123),
-(22, 'Calvi-St-Catherine', 42.3112, 8.4723),
-(23, 'Cannes-Mandelieu', 43.3259, 6.5735),
-(24, 'Carcassonne-Salvaza', 43.1311, 2.1836),
-(25, 'Castres-Mazamet', 43.3259, 2.1724),
-(26, 'Chalons-Vatry', 48.4624, 4.1222),
-(27, 'Chambery-Aix-Les-Bains', 45.3824, 5.5247),
-(28, 'Chateauroux-Deols', 46.5135, 1.4311),
-(31, 'Clermont-Ferrand-Clermont-Ferrand/Auvergne', 45.4723, 3.936),
-(32, 'Colmar-Houssen', 48.635, 7.2136),
-(33, 'Deauville-St-Gatien', 49.2135, 0.936),
-(34, 'Dijon-Longvic', 47.1612, 5.523),
-(36, 'Dole-Tavaux', 47.223, 5.2547),
-(37, 'Epinal-Mirecourt', 48.1947, 6.412),
-(38, 'Figari-Sud-Corse', 41.3, 9.559),
-(39, 'Grenoble-Isere', 45.2135, 5.1948),
-(44, 'Le-Havre-Octeville-Sur-Mer', 49.3148, 0.524),
-(45, 'Le-Mans-Arnage', 47.57, 0.12),
-(46, 'Le-Puy-Loudes', 45.447, 3.4535),
-(47, 'Le-Touquet-Paris-Plage', 50.3035, 1.3747),
-(48, 'Lille-Lesquin', 50.3336, 3.523),
-(49, 'Limoges-Bellegarde', 45.5135, 1.1047),
-(51, 'Lyon-Bron-Bron', 45.4347, 4.5624),
-(52, 'Lyon-Saint-Exupery', 45.4347, 5.448),
-(53, 'Marseille-Provence', 43.2623, 5.1235),
-(54, 'Megeve-Megeve', 45.5127, 6.375),
-(55, 'Metz-Nancy-Lorraine', 48.5847, 6.15),
-(56, 'Montlucon-Gueret', 46.1347, 2.2135),
-(57, 'Montpellier-Mediterranee', 43.3447, 3.5735),
-(59, 'Bale-Mulhouse', 47.3524, 7.3148),
-(61, 'Nice-Cote-D\'Azur', 43.4012, 7.1235),
-(62, 'Nimes-Garons-', 43.4535, 4.2511),
-(64, 'Paris-Charles-De-Gaulle', 49.035, 2.33),
-(65, 'Paris-Issy-Les-Moulineaux', 48.4912, 2.1647),
-(66, 'Paris-Le-Bourget', 48.5811, 2.2623),
-(67, 'Paris-Orly', 48.4311, 2.2247),
-(69, 'Perigueux-Bassillac', 45.12, 0.4911),
-(70, 'Perpignan-Rivesaltes', 42.4424, 2.5212),
-(71, 'Poitiers-Biard', 46.3524, 0.1836),
-(72, 'Propriano', 41.3935, 8.5324),
-(75, 'Roanne-Renaison', 46.259, 4),
-(77, 'Rodez-Marcillac', 44.2435, 2.2847),
-(78, 'Rouen-Vallee-De-Seine', 49.2324, 1.1047),
-(80, 'Saint-Etienne-Boutheon', 45.3148, 4.18),
-(82, 'Strasbourg-Entzheim', 48.3223, 7.3747),
-(83, 'Tarbes-Lourdes-Pyrenees', 43.1123, 0),
-(84, 'Hyeres-Le-Palyvestre', 43.6, 6.9),
-(85, 'Toulouse-Blagnac', 43.3748, 1.2212),
-(86, 'Tours-Val-De-Loire', 47.2547, 0.4311),
-(87, 'Troyes-Barberey', 48.175, 4.427),
-(88, 'Valence-Chabeuil', 44.5512, 4.5811),
-(89, 'Valenciennes-Denain', 50.1912, 3.2812),
-(90, 'Vichy-Charmeil', 46.1012, 3.24);
+(1, 'Agen-La-Garenne', 44.17, 0.589722),
+(2, 'Ajaccio-Napoleon-Bonaparte', 41.92, 8.8),
+(3, 'Albi-Le-Sequestre', 43.9097, 2.12),
+(4, 'Angers-Marce', 47.56, 0.31),
+(5, 'Angouleme-Brie-Champniers', 45.7297, 0.22),
+(6, 'Annecy-Meythet', 45.9297, 6.11),
+(7, 'Aurillac', 44.8997, 2.41972),
+(8, 'Auxerre-Branches', 47.7983, 3.56694),
+(9, 'Avignon-Caumont', 43.9097, 4.9),
+(10, 'Bastia-Poretta', 42.5497, 9.48),
+(11, 'Beauvais-Tille', 49.45, 2.10972),
+(12, 'Bergerac-Roumaniere', 44.82, 0.52),
+(13, 'Beziers-Vias', 43.32, 3.35),
+(15, 'Bordeaux-Merignac', 44.8297, 0.719722),
+(16, 'Bourges', 47.06, 2.37972),
+(18, 'Brive-Vallee-De-Dordogne-', 45.0411, 1.48306),
+(19, 'Caen-Carpiquet', 49.17, 0.45),
+(20, 'Cahors-Lalbenque', 44.4481, 1.44111),
+(21, 'Calais-Dunkerque', 50.9478, 1.85639),
+(22, 'Calvi-St-Catherine', 42.52, 8.78972),
+(23, 'Cannes-Mandelieu', 43.5497, 6.95972),
+(24, 'Carcassonne-Salvaza', 43.2197, 2.31),
+(25, 'Castres-Mazamet', 43.5497, 2.29),
+(26, 'Chalons-Vatry', 48.7733, 4.20611),
+(27, 'Chambery-Aix-Les-Bains', 45.64, 5.87972),
+(28, 'Chateauroux-Deols', 46.8597, 1.71972),
+(30, 'Cholet-Le-Pontreau', 47.0797, 0.889722),
+(31, 'Clermont-Ferrand-Clermont-Ferrand/Auvergne', 45.7897, 3.16),
+(32, 'Colmar-Houssen', 48.1097, 7.36),
+(33, 'Deauville-St-Gatien', 49.3597, 0.16),
+(34, 'Dijon-Longvic', 47.27, 5.08972),
+(36, 'Dole-Tavaux', 47.0397, 5.42972),
+(37, 'Epinal-Mirecourt', 48.3297, 6.07),
+(38, 'Figari-Sud-Corse', 41.5, 9.09972),
+(39, 'Grenoble-Isere', 45.3597, 5.33),
+(43, 'Laval-Entrammes', 48.03, 0.739722),
+(44, 'Le-Havre-Octeville-Sur-Mer', 49.53, 0.09),
+(45, 'Le-Mans-Arnage', 47.95, 0.2),
+(46, 'Le-Puy-Loudes', 45.0797, 3.75972),
+(47, 'Le-Touquet-Paris-Plage', 50.5097, 1.62972),
+(48, 'Lille-Lesquin', 50.56, 3.08972),
+(49, 'Limoges-Bellegarde', 45.8597, 1.17972),
+(51, 'Lyon-Bron-Bron', 45.7297, 4.94),
+(52, 'Lyon-Saint-Exupery', 45.7297, 5.08),
+(53, 'Marseille-Provence', 43.4397, 5.20972),
+(54, 'Megeve-Megeve', 45.8575, 6.61806),
+(55, 'Metz-Nancy-Lorraine', 48.9797, 6.25),
+(56, 'Montlucon-Gueret', 46.2297, 2.35972),
+(57, 'Montpellier-Mediterranee', 43.5797, 3.95972),
+(59, 'Bale-Mulhouse', 47.59, 7.53),
+(61, 'Nice-Cote-D\'Azur', 43.67, 7.20972),
+(62, 'Nimes-Garons-', 43.7597, 4.41972),
+(63, 'Niort-Souche', 46.31, 0.39),
+(64, 'Paris-Charles-De-Gaulle', 49.0097, 2.55),
+(65, 'Paris-Issy-Les-Moulineaux', 48.82, 2.27972),
+(66, 'Paris-Le-Bourget', 48.9697, 2.43972),
+(67, 'Paris-Orly', 48.7197, 2.37972),
+(68, 'Pau-Pyrenees', 43.38, 0.42),
+(69, 'Perigueux-Bassillac', 45.2, 0.819722),
+(70, 'Perpignan-Rivesaltes', 42.74, 2.87),
+(71, 'Poitiers-Biard', 46.59, 0.31),
+(72, 'Propriano', 41.6597, 8.89),
+(75, 'Roanne-Renaison', 46.0497, 4),
+(76, 'Rochefort-St-Agnant', 45.89, 0.979722),
+(77, 'Rodez-Marcillac', 44.4097, 2.47972),
+(78, 'Rouen-Vallee-De-Seine', 49.39, 1.17972),
+(80, 'Saint-Etienne-Boutheon', 45.53, 4.3),
+(82, 'Strasbourg-Entzheim', 48.5397, 7.62972),
+(83, 'Tarbes-Lourdes-Pyrenees', 43.1897, 0),
+(84, 'Hyeres-Le-Palyvestre', 43.1, 6.15),
+(85, 'Toulouse-Blagnac', 43.63, 1.37),
+(86, 'Tours-Val-De-Loire', 47.4297, 0.719722),
+(87, 'Troyes-Barberey', 48.2972, 4.07417),
+(88, 'Valence-Chabeuil', 44.92, 4.96972),
+(89, 'Valenciennes-Denain', 50.32, 3.47),
+(90, 'Vichy-Charmeil', 46.17, 3.4);
 
 -- --------------------------------------------------------
 
@@ -139,17 +147,17 @@ INSERT INTO `car` (`id`, `model`, `seats`, `doors`, `owner_id`, `gearbox_id`, `f
 (8, 'Opel Astra', 5, 5, 4, 2, 2, 12.5),
 (9, 'Renault Scenic 4', 5, 5, 3, 2, 2, 10),
 (10, 'Renault Espace 5', 5, 5, 2, 1, 2, 10),
-(11, 'Suzuki S Cross', 5, 5, 12, 2, 2, 9.5),
+(11, 'Suzuki Swift 2013', 5, 5, 12, 2, 2, 120.5),
 (20, 'Fiat Punto Evo 2012', 1, 1, 1, 1, 1, 1),
 (22, 'Fiat 500', 5, 3, 13, 2, 1, 10.45),
 (35, 'Renault Clio 4', 5, 3, 13, 2, 1, 6.5),
 (67, 'Lamborghini Urus', 2, 3, 14, 1, 1, 40),
 (103, 'BMW Z4', 2, 2, 15, 2, 1, 300),
 (104, 'Pagani Huayra', 2, 2, 15, 2, 1, 300),
-(105, 'Tesla model S', 5, 5, 13, 1, 4, 130.99),
+(105, 'Tesla Model S', 5, 5, 13, 1, 4, 130.99),
 (119, 'Tesla Model 3', 5, 5, 1, 1, 4, 199),
 (128, 'Citroën C3', 5, 5, 10, 2, 1, 8.5),
-(131, 'Citroën C2', 5, 3, 132, 2, 1, 8.55);
+(132, 'Volkswagen Coccinelle 2018', 4, 3, 153, 2, 2, 20.5);
 
 -- --------------------------------------------------------
 
@@ -209,7 +217,8 @@ CREATE TABLE `login` (
 
 INSERT INTO `login` (`id`, `type`) VALUES
 (1, 'Hirecar'),
-(2, 'Google');
+(2, 'Google'),
+(3, 'Facebook');
 
 -- --------------------------------------------------------
 
@@ -232,11 +241,11 @@ CREATE TABLE `parking_lot` (
 --
 
 INSERT INTO `parking_lot` (`id`, `label`, `lat`, `lng`, `capacity`, `price_per_day`, `airport_id`) VALUES
-(1, 'Paris Charles de Gaulle - Terminal D1', 49.032, 2.31, 45, 12, 64),
-(2, 'Paris Charles de Gaulle - Terminal E2', 49.031, 2.32, 25, 11, 64),
-(4, 'Colmar-Houssen - Parking A1', 48.633, 7.2134, 80, 12, 32),
-(5, 'Colmar-Houssen - Parking B3', 48.632, 7.2133, 30, 12, 32),
-(8, 'Paris Charles de Gaulle - Terminal D3', 49.0036, 2.3255, 64, 13, 64);
+(1, 'Paris Charles de Gaulle - Terminal D1', 49.0013, 2.54, 45, 12, 64),
+(2, 'Paris Charles de Gaulle - Terminal E2', 49.023, 2.6, 25, 11, 64),
+(4, 'Colmar-Houssen - Parking A1', 48.1094, 7.36204, 80, 12, 32),
+(5, 'Colmar-Houssen - Parking B3', 48.1088, 7.36211, 30, 12, 32),
+(8, 'Paris Charles de Gaulle - Terminal D3', 49.006, 2.58, 64, 13, 64);
 
 -- --------------------------------------------------------
 
@@ -328,7 +337,9 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`,
 (49, 'Dark', 'Vador', 'dark.vador@utt.fr', '0523454342', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
 (125, 'Olivia', 'Dupond', 'olivia.dupond@utt.fr', '0324353456', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
 (129, 'Albert', 'Einstein', 'albert.einstein@utt.fr', '3141592653', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
-(132, 'Nathalie', 'Zhang', 'mlle.zhang.nathalie@gmail.com', NULL, NULL, 0, 2);
+(134, 'Chloé', 'Chamaillard', 'chloe.chamaillard@utt.fr', '0124543676', '$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe', 0, 1),
+(153, 'Nathalie', 'Zhang', 'mlle.zhang.nathalie@gmail.com', NULL, NULL, 0, 2),
+(154, 'Nathalie', 'Zhang', 'mlle.zhang.nathalie@gmail.com', NULL, NULL, 0, 3);
 
 --
 -- Indexes for dumped tables
@@ -395,7 +406,7 @@ ALTER TABLE `rent_parking_spot`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`) USING BTREE,
+  ADD UNIQUE KEY `email_per_social_media` (`email`,`login_id`),
   ADD KEY `login_id` (`login_id`);
 
 --
@@ -412,7 +423,7 @@ ALTER TABLE `airport`
 -- AUTO_INCREMENT for table `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT for table `fuel`
@@ -430,7 +441,7 @@ ALTER TABLE `gearbox`
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `parking_lot`
@@ -448,13 +459,13 @@ ALTER TABLE `rent_car`
 -- AUTO_INCREMENT for table `rent_parking_spot`
 --
 ALTER TABLE `rent_parking_spot`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- Constraints for dumped tables
