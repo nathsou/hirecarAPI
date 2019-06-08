@@ -10,6 +10,7 @@ namespace App\Controller;
 
 use App\Entity\ParkingLot;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ParkingLotController extends MediaTypeController
@@ -22,13 +23,13 @@ class ParkingLotController extends MediaTypeController
      */
     public function getParkingLots(Request $request)
     {
-            $pl = new ParkingLot();
-            return $this->handleResponse($request, $pl->getParkingLotsRequest($request));
+        $pl = new ParkingLot();
+        return $this->handleResponse($request, $pl->getParkingLotsRequest($request));
     }
     /**
      * parking_lots
-     * @Route("/parking_lots",methods={"POST"})
-     *  condition="context.getMethod() in ['POST']
+     * @Route("/parking_lots",methods={"PUT"})
+     *  condition="context.getMethod() in ['PUT']
      */
     public function insertParkingLot(Request $request)
     {
@@ -57,11 +58,15 @@ class ParkingLotController extends MediaTypeController
                 isset($airport_id) && is_numeric($airport_id)
             ) {
                 $requestDB = new ParkingLot();
-                $requestDB->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id);
-                return $this->mediaTypeConverter($request, ["etat" => "ok"]);
+                return $this->handleResponse($request,
+                    $requestDB->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
+                );
             }
         }
 
-        return $this->mediaTypeConverter($request, ["etat" => "error"]);
+        return $this->handleResponse($request, [
+            "msg" => 'invalid input',
+            "status" => Response::HTTP_BAD_REQUEST
+        ]);
     }
 }

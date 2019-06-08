@@ -58,14 +58,23 @@ class UserController extends MediaTypeController
                     $user->insertUserRequest($args);
                     return $this->mediaTypeConverter($request);
                 } else {
-                    return new Response('{"email_error" : "L\'email est déjà utilisé par un autre utilisateur"}', Response::HTTP_CONFLICT);
+                    return $this->handleResponse($request, [
+                        "msg" => "email address already used",
+                        "status" => Response::HTTP_CONFLICT
+                    ]);
                 }
             }
 
-            return $this->mediaTypeConverter($request);
+            return $this->handleResponse($request, [
+                "status" => Response::HTTP_CREATED,
+                "message" => "user created"
+            ]);
         }
 
-        return new Response('', Response::HTTP_BAD_REQUEST);
+        return $this->handleResponse($request, [
+            "status" => Response::HTTP_BAD_REQUEST,
+            "message" => "invalid input"
+        ]);
     }
 
     /**

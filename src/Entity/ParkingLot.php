@@ -34,7 +34,7 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             "max" => $request->query->get('max_price')
         ]);
 
-        $this->selectBySeats($request->query->get("number_places"));
+        $this->selectByCapacity($request->query->get("min_capacity"));
 
         $this->selectById($request->query->get("airport_id"));
 
@@ -47,17 +47,17 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             return ['parking_lots' => $parking_lots];
         }
 
-       return [
-           "error_msg" => 'incorrect parameters',
-           "error_status" => Response::HTTP_BAD_REQUEST
-       ];
+        return [
+            "msg" => 'incorrect parameters',
+            "status" => Response::HTTP_BAD_REQUEST
+        ];
     }
 
     public function insertParkingLotRequest($label, $lat, $lng, $capacity, $pricePerDay, $airportId)
     {
         $db = SModel::getInstance();
         $query = "INSERT INTO parking_lot (label,lat,lng,capacity,price_per_day,airport_id)
-            VALUES (:label, :lat, :lng, :nb_places, :price_per_day,:airport_id)";
+            VALUES (:label, :lat, :lng, :capacity, :price_per_day,:airport_id)";
         $prep = $db->prepare($query);
         $prep->bindValue("label", $label);
         $prep->bindValue("lat", $lat);
@@ -65,7 +65,27 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         $prep->bindValue("capacity", $capacity);
         $prep->bindValue("price_per_day", $pricePerDay);
         $prep->bindValue("airport_id", $airportId);
+
         $prep->execute();
+
+        switch ($prep->errorCode()) {
+            case "23000":
+                return [
+                    "msg" => "a parking lot with the same label already exists",
+                    "status" => Response::HTTP_CONFLICT
+                ];
+            case "00000":
+                return [
+                    "msg" => "parking lot created",
+                    "status" => Response::HTTP_CREATED
+                ];
+            default:
+                return [
+                    "msg" => "invalid input",
+                    "status" => Response::HTTP_BAD_REQUEST
+                ];
+        }
+
     }
 
     private function selectByCoords($lat, $lng, $radius)
@@ -132,12 +152,12 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         }
     }
 
-    private function selectBySeats($seats)
+    private function selectByCapacity($min_capacity)
     {
-        if (isset($seats) && is_numeric($seats)) {
+        if (isset($min_capacity) && is_numeric($min_capacity)) {
             $this->valid_request = true;
-            $this->addWhereCondition("nb_places >= :seats_count");
-            $this->query_parameters["seats_count"] = $seats;
+            $this->addWhereCondition("capacity >= :min_capacity");
+            $this->query_parameters["min_capacity"] = $min_capacity;
         }
     }
 
@@ -145,7 +165,7 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     {
         if (isset($id) && is_numeric($id)) {
             $this->valid_request = true;
-            $this->addWhereCondition( "airport_id = :id");
+            $this->addWhereCondition("airport_id = :id");
             $this->query_parameters["id"] = $id;
         }
     }
@@ -155,7 +175,7 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         if (isset($name) && is_string($name)) {
             $this->valid_request = true;
             $this->addWhereCondition("airport_id IN (SELECT id FROM airport WHERE LOWER(name)
-                LIKE '%". strtolower($name) ."%')");
+                LIKE '%" . strtolower($name) . "%')");
             // $this->query_parameters["airport_name"] = $name;
         }
     }

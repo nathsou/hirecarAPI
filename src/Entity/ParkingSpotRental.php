@@ -48,8 +48,9 @@ class ParkingSpotRental extends RequestBuilder
             return $this->execQuery()[0];
         } else {
             return [
-                "error_msg" => "incorrect parameters",
-                "error_status" => Response::HTTP_BAD_REQUEST
+                "error" => true,
+                "msg" => "incorrect parameters",
+                "status" => Response::HTTP_BAD_REQUEST
             ];
         }
     }
@@ -80,8 +81,8 @@ class ParkingSpotRental extends RequestBuilder
             return ["parking_spot_rentals" => $parking_spot_rentals];
         }
         return [
-            "error_msg" => "incorrect parameters",
-            "error_status" => Response::HTTP_BAD_REQUEST
+            "msg" => "incorrect parameters",
+            "status" => Response::HTTP_BAD_REQUEST
         ];
     }
 

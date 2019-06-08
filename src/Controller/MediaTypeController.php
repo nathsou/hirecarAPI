@@ -59,10 +59,10 @@ class MediaTypeController extends AbstractController
 
     protected function handleResponse($request, array $data) {
         if (
-            array_key_exists("error_msg", $data) &&
-            array_key_exists( "error_status", $data)
+            array_key_exists("msg", $data) &&
+            array_key_exists( "status", $data)
         ) {
-            return new Response($data["error_msg"], $data["error_status"]);
+            return new Response($data["msg"], $data["status"]);
         }
 
         return $this->mediaTypeConverter($request, $data);

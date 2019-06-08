@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\ParkingSpotRental;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ParkingSpotRentalController extends MediaTypeController
@@ -60,6 +61,10 @@ class ParkingSpotRentalController extends MediaTypeController
             $spot_rental->deleteParkingSpotRentalRequest($id);
             return $this->mediaTypeConverter($request);
         }
-        return new Response('', Response::HTTP_BAD_REQUEST);
+
+        return $this->handleResponse($request, [
+            "msg" => "",
+            "status" => Response::HTTP_BAD_REQUEST
+        ]);
     }
 }
