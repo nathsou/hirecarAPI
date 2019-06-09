@@ -1,0 +1,2 @@
+/parking_lots:
+  $ref: ./parking_lots.yaml

@@ -17,6 +17,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class MediaTypeController extends AbstractController
 {
+    protected $spec_name = null;
+
     public function __construct()
     { }
 
@@ -58,20 +60,29 @@ class MediaTypeController extends AbstractController
     }
 
     protected function handleResponse($request, array $data) {
+        $res = null;
         if (
             array_key_exists("msg", $data) &&
             array_key_exists( "status", $data)
         ) {
-            return new Response($data["msg"], $data["status"]);
+            $res = new Response($data["msg"], $data["status"]);
+        } else {
+            $res = $this->mediaTypeConverter($request, $data);
         }
 
-        return $this->mediaTypeConverter($request, $data);
+        // provide a service descriptor in the LINK header if available
+        if ($this->spec_name != null) {
+            $path = $_SERVER['HTTP_HOST']."/spec/".$this->spec_name;
+            $res->headers->set("Link", "<" . $path . ">; rel=describedby");
+        }
+
+        return $res;
     }
 
     protected function inputMediaTypeConverter(Request $request)
     {
         // ignore ;charset=UTF-8 etc..
-        $mime = explode(";", $request->headers->get("content-type"))[0];
+        $mime = explode(";", $request->headers->get("Content-Type"))[0];
 
         switch ($mime) {
             case "application/json": {

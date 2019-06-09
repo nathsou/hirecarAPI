@@ -1,0 +1,17 @@
+{
+  "name": "hirecar-service-descriptor-merger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "merge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "json-refs": "^3.0.13",
+    "js-yaml": "^3.13.1",
+    "json-beautify": "^1.1.0",
+    "fs-extra": "^8.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

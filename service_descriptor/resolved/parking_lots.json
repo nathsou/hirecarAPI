@@ -1,0 +1,308 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HireCar API",
+    "description": "HireCar API",
+    "contact": {
+      "email": "hirecar@example.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [{
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/parking_lots": {
+      "get": {
+        "tags": ["developers"],
+        "summary": "searches parking lots",
+        "description": "Query parking lots filtered by some common criteria\n",
+        "operationId": "searchParkingLots",
+        "parameters": [{
+            "name": "airport_name",
+            "in": "query",
+            "description": "name of the airport(s)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "airport_id",
+            "in": "query",
+            "description": "id of the airport",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "center_lat",
+            "in": "query",
+            "description": "the latitude of the center of the searching circle",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number",
+              "format": "float"
+            }
+          },
+          {
+            "name": "center_lng",
+            "in": "query",
+            "description": "the latitude of the center of the searching circle",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number",
+              "format": "float"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "description": "the radius of the searching circle",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "number",
+              "format": "float"
+            }
+          },
+          {
+            "name": "min_capacity",
+            "in": "query",
+            "description": "the minimum number of parking spots",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "required": [
+                      "airport",
+                      "capacity",
+                      "id",
+                      "label",
+                      "lat",
+                      "lng",
+                      "price_per_day"
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 31
+                      },
+                      "label": {
+                        "type": "string",
+                        "example": "Paris Charles de Gaulle - Terminal D1"
+                      },
+                      "lat": {
+                        "maximum": 90,
+                        "minimum": -90,
+                        "type": "number",
+                        "format": "float",
+                        "example": 49.0013
+                      },
+                      "lng": {
+                        "maximum": 180,
+                        "minimum": -180,
+                        "type": "number",
+                        "format": "float",
+                        "example": 2.54
+                      },
+                      "capacity": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 54
+                      },
+                      "price_per_day": {
+                        "minimum": 0,
+                        "type": "number",
+                        "format": "float",
+                        "example": 12.5
+                      },
+                      "airport": {
+                        "required": ["id", "lat", "lng", "name"],
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example": 64
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Paris-Charles-De-Gaulle"
+                          },
+                          "lat": {
+                            "maximum": 90,
+                            "minimum": -90,
+                            "type": "number",
+                            "format": "float",
+                            "example": 49.0013
+                          },
+                          "lng": {
+                            "maximum": 180,
+                            "minimum": -180,
+                            "type": "number",
+                            "format": "float",
+                            "example": 2.54
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "incorrect parameters"
+          }
+        }
+      },
+      "put": {
+        "tags": ["admins"],
+        "summary": "add a parking lot",
+        "description": "Inserts a parking lot in the database",
+        "operationId": "insertParkingLot",
+        "requestBody": {
+          "description": "Parking lot to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "airport",
+                  "capacity",
+                  "id",
+                  "label",
+                  "lat",
+                  "lng",
+                  "price_per_day"
+                ],
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 31
+                  },
+                  "label": {
+                    "type": "string",
+                    "example": "Paris Charles de Gaulle - Terminal D1"
+                  },
+                  "lat": {
+                    "maximum": 90,
+                    "minimum": -90,
+                    "type": "number",
+                    "format": "float",
+                    "example": 49.0013
+                  },
+                  "lng": {
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number",
+                    "format": "float",
+                    "example": 2.54
+                  },
+                  "capacity": {
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 54
+                  },
+                  "price_per_day": {
+                    "minimum": 0,
+                    "type": "number",
+                    "format": "float",
+                    "example": 12.5
+                  },
+                  "airport": {
+                    "required": ["id", "lat", "lng", "name"],
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 64
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Paris-Charles-De-Gaulle"
+                      },
+                      "lat": {
+                        "maximum": 90,
+                        "minimum": -90,
+                        "type": "number",
+                        "format": "float",
+                        "example": 49.0013
+                      },
+                      "lng": {
+                        "maximum": 180,
+                        "minimum": -180,
+                        "type": "number",
+                        "format": "float",
+                        "example": 2.54
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "parking lot created"
+          },
+          "400": {
+            "description": "invalid input"
+          },
+          "409": {
+            "description": "a parking lot with the same label already exists"
+          }
+        }
+      }
+    }
+  }
+}

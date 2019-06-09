@@ -1,0 +1,98 @@
+get:
+  tags:
+  - developers
+  summary: searches parking lots
+  description: |
+    Query parking lots filtered by some common criteria
+  operationId: searchParkingLots
+  parameters:
+  - name: airport_name
+    in: query
+    description: name of the airport(s)
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: string
+  - name: airport_id
+    in: query
+    description: id of the airport
+    required: false
+    style: form
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  - name: center_lat
+    in: query
+    description: the latitude of the center of the searching circle
+    required: false
+    style: form
+    explode: true
+    schema:
+      maximum: 90
+      minimum: -90
+      type: number
+      format: float
+  - name: center_lng
+    in: query
+    description: the latitude of the center of the searching circle
+    required: false
+    style: form
+    explode: true
+    schema:
+      maximum: 180
+      minimum: -180
+      type: number
+      format: float
+  - name: radius
+    in: query
+    description: the radius of the searching circle
+    required: false
+    style: form
+    explode: true
+    schema:
+      minimum: 0
+      type: number
+      format: float
+  - name: min_capacity
+    in: query
+    description: the minimum number of parking spots
+    required: false
+    style: form
+    explode: true
+    schema:
+      minimum: 0
+      type: integer
+      format: int32
+  responses:
+    200:
+      description: search results matching criteria
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../schemas/ParkingLot.yaml
+    400:
+      description: incorrect parameters
+put:
+  tags:
+  - admins
+  summary: add a parking lot
+  description: Inserts a parking lot in the database
+  operationId: insertParkingLot
+  requestBody:
+    description: Parking lot to add
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/ParkingLot.yaml
+  responses:
+    201:
+      description: parking lot created
+    400:
+      description: invalid input
+    409:
+      description: a parking lot with the same label already exists

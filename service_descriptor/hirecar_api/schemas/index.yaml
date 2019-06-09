@@ -1,0 +1,4 @@
+ParkingLot:
+  $ref: ./ParkingLot.yaml
+Airport:
+  $ref: ./Airport.yaml
