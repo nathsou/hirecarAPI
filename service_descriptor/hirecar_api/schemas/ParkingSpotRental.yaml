@@ -1,0 +1,24 @@
+required:
+  - id
+  - start_date
+  - end_date
+  - car
+  - parking_lot
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    example: 46
+  start_date:
+    type: string
+    format: date-time
+    example: 2019-06-02 10:00:00
+  end_date:
+    type: string
+    format: date-time
+    example: 2019-06-12 10:00:00
+  car:
+    $ref: ./Car.yaml
+  parking_lot:
+    $ref: ./ParkingLot.yaml

@@ -1,0 +1,42 @@
+required:
+  - id
+  - model
+  - seats
+  - doors
+  - owner_id
+  - price_per_day
+  - gearbox
+  - fuel
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    example: 105
+  model:
+    type: string
+    example: Tesla Model S
+  seats:
+    minimum: 0
+    type: integer
+    format: int32
+    example: 5
+  doors:
+    minimum: 0
+    type: integer
+    format: int32
+    example: 5
+  owner_id:
+    minimum: 0
+    type: integer
+    format: int32
+    example: 13
+  price_per_day:
+    minimum: 0
+    type: number
+    format: float
+    example: 130.99
+  gearbox:
+    $ref: ./Gearbox.yaml
+  fuel:
+    $ref: ./Fuel.yaml

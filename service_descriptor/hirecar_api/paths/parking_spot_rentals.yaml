@@ -1,0 +1,121 @@
+get:
+  tags:
+  - developers
+  summary: searches parking spot rentals
+  description: |
+    Query parking spots rentals by some common criteria
+  operationId: searchParkingSpotRentals
+  parameters:
+  - name: airport_name
+    in: query
+    description: name of the airport(s)
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: string
+  - name: airport_id
+    in: query
+    description: id of the airport
+    required: false
+    style: form
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  - name: owner_id
+    in: query
+    description: id of the car's owner on the parking spot
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: integer
+      format: int32
+  - name: car_id
+    in: query
+    description: id of the car on the parking spot
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: integer
+      format: int32
+  - name: id
+    in: query
+    description: id of the parking spot rental
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: integer
+      format: int32
+  - name: start_date
+    in: query
+    description: the start date of the parking spot rental
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: string
+      format: date-time
+  - name: end_date
+    in: query
+    description: the end date of the parking spot rental circle
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: string
+      format: date-time
+  responses:
+    200:
+      description: search results matching criteria
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../schemas/ParkingSpotRental.yaml
+    400:
+      description: incorrect parameters
+post:
+  tags:
+  - admins
+  summary: add a parking spot rental
+  description: Inserts a parking spot rental in the database
+  operationId: insertParkingSpotRental
+  requestBody:
+    description: Parking spot rental to add
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/InsertedParkingSpotRental.yaml
+  responses:
+    201:
+      description: parking spot created
+    400:
+      description: invalid input
+delete:
+  tags:
+  - admins
+  summary: delete a parking spot rental
+  description: Deletes a parking spot rental in the database
+  operationId: deleteParkingSpotRental
+  parameters:
+  - name: id
+    in: query
+    description: id of the parking spot rental
+    required: false
+    style: form
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  responses:
+    200:
+      description: parking spot deleted
+    400:
+      description: invalid parking spot rental value

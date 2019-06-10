@@ -1,0 +1,25 @@
+required:
+  - start_date
+  - end_date
+  - car_id
+  - parking_lot_id
+type: object
+properties:
+  start_date:
+    type: string
+    format: date-time
+    example: 2019-06-02 10:00:00
+  end_date:
+    type: string
+    format: date-time
+    example: 2019-06-02 10:00:00
+  car_id:
+    maximum: 0
+    type: integer
+    format: int32
+    example: 105
+  parking_lot_id:
+    minimum: 0
+    type: integer
+    format: int32
+    example: 5

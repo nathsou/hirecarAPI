@@ -2,3 +2,11 @@ ParkingLot:
   $ref: ./ParkingLot.yaml
 Airport:
   $ref: ./Airport.yaml
+ParkingSpotRental:
+  $ref: ./ParkingSpotRental.yaml
+Car:
+  $ref: ./Car.yaml
+Gearbox:
+  $ref: ./Gearbox.yaml
+Fuel:
+  $ref: ./Fuel.yaml
