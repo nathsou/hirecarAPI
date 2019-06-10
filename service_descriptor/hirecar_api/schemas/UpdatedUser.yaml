@@ -1,0 +1,27 @@
+required:
+  - firstname
+  - lastname
+  - email
+  - phone
+  - password
+  - new_password
+type: object
+properties:
+  firstname:
+    type: string
+    example: Marty
+  lastname:
+    type: string
+    example: McFly
+  email:
+    type: string
+    example: marty@delorean.com
+  phone:
+    type: string
+    example: 0123456789
+  password:
+    type: string
+    example: $2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe  
+  new_password:
+    type: string
+    example: $2a$10$5p/XjRv1Kw9OIqzg4t186eBMfo.3JXzZl4a9Fk9qZpC4MGwPzg.aq

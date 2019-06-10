@@ -8,3 +8,7 @@
   $ref: ./cars.yaml
 /cars/{carId}:
   $ref: ./cars_id.yaml
+/users:
+  $ref: ./users.yaml
+/users/{userId}:
+  $ref: ./users_id.yaml

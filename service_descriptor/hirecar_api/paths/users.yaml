@@ -1,0 +1,19 @@
+post:
+  tags:
+  - admins
+  summary: add a user
+  description: Inserts a user in the database
+  operationId: insertUser
+  requestBody:
+    description: User to add
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/InsertedUser.yaml
+  responses:
+    201:
+      description: user created
+    409:
+      description: email address already used
+    400:
+      description: invalid input

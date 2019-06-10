@@ -1,0 +1,28 @@
+put:
+  tags:
+  - admins
+  summary: update an existing user
+  description: Updates an existing user in the database
+  operationId: updateUser
+  parameters:
+  - name: id
+    in: path
+    description: id of the user
+    required: true
+    style: simple
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  requestBody:
+    description: User to update
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/UpdatedUser.yaml
+  responses:
+    200:
+      description: user updated
+    400:
+      description: invalid user value
