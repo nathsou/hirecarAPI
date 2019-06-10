@@ -22,11 +22,15 @@ class MediaTypeController extends AbstractController
     public function __construct()
     { }
 
+    protected function getMimes(Request $request) {
+        return  explode(',',  explode(";", trim($request->headers->get("accept")))[0]);
+    }
+
     protected function mediaTypeConverter(
         Request $request,
         $data = NULL
     ) {
-        $mimes =  explode(',',  explode(";", $request->headers->get("accept"))[0]);
+        $mimes = $this->getMimes($request);
 
         foreach ($mimes as $mime) {
             switch ($mime) {

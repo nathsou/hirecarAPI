@@ -43,10 +43,11 @@ paths:
 
     resolve(root, options).then(results => {
         const merged_json = beautify(results.resolved, null, 2, 80);
+        const merged_yaml = YAML.safeDump(results.resolved);
 
-        const out_file = `../resolved/${path}.json`;
-        fs.outputFileSync(out_file, merged_json);
+        fs.outputFileSync(`../resolved/${path}.json`, merged_json);
+        fs.outputFileSync(`../resolved/${path}.yaml`, merged_yaml);
 
-        console.info('resolved: ' + out_file);
+        console.info(`resolved: ${path}`);
     });
 }

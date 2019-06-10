@@ -88,7 +88,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: ../schemas/ParkingLot.yaml
+          $ref: ../schemas/InsertedParkingLot.yaml
   responses:
     201:
       description: parking lot created
