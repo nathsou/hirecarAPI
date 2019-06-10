@@ -1,19 +1,13 @@
 required:
-  - id
   - model
   - seats
   - doors
   - owner_id
+  - gearbox_id
+  - fuel_id
   - price_per_day
-  - gearbox
-  - fuel
 type: object
 properties:
-  id:
-    minimum: 1
-    type: integer
-    format: int32
-    example: 105
   model:
     type: string
     example: Tesla Model S
@@ -32,12 +26,18 @@ properties:
     type: integer
     format: int32
     example: 13
+  gearbox_id:
+    minimum: 1
+    type: integer
+    format: int32
+    example: 2
+  fuel_id:
+    minimum: 1
+    type: integer
+    format: int32
+    example: 2
   price_per_day:
     minimum: 1
     type: number
     format: float
     example: 130.99
-  gearbox:
-    $ref: ./Gearbox.yaml
-  fuel:
-    $ref: ./Fuel.yaml

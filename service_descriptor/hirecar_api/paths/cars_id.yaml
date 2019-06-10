@@ -1,0 +1,50 @@
+put:
+  tags:
+  - admins
+  summary: update an existing car
+  description: Updates an existing car in the database
+  operationId: updateCar
+  parameters:
+  - name: id
+    in: path
+    description: id of the car
+    required: true
+    style: simple
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  requestBody:
+    description: Car to update
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/InsertedCar.yaml
+  responses:
+    200:
+      description: car updated
+    400:
+      description: invalid car id
+delete:
+  tags:
+  - admins
+  summary: delete a car
+  description: Deletes a car in the database
+  operationId: deleteCar
+  parameters:
+  - name: id
+    in: path
+    description: id of the car
+    required: true
+    style: simple
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  responses:
+    200:
+      description: car deleted
+    400:
+      description: invalid car id

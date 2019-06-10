@@ -48,6 +48,7 @@ paths:
           style: form
           explode: true
           schema:
+            minimum: 1
             type: integer
             format: int32
         - name: car_id
@@ -57,6 +58,7 @@ paths:
           style: form
           explode: true
           schema:
+            minimum: 1
             type: integer
             format: int32
         - name: id
@@ -66,6 +68,7 @@ paths:
           style: form
           explode: true
           schema:
+            minimum: 1
             type: integer
             format: int32
         - name: start_date
@@ -103,6 +106,7 @@ paths:
                   type: object
                   properties:
                     id:
+                      minimum: 1
                       type: integer
                       format: int32
                       example: 46
@@ -127,6 +131,7 @@ paths:
                       type: object
                       properties:
                         id:
+                          minimum: 1
                           type: integer
                           format: int32
                           example: 105
@@ -134,22 +139,22 @@ paths:
                           type: string
                           example: Tesla Model S
                         seats:
-                          minimum: 0
+                          minimum: 1
                           type: integer
                           format: int32
                           example: 5
                         doors:
-                          minimum: 0
+                          minimum: 1
                           type: integer
                           format: int32
                           example: 5
                         owner_id:
-                          minimum: 0
+                          minimum: 1
                           type: integer
                           format: int32
                           example: 13
                         price_per_day:
-                          minimum: 0
+                          minimum: 1
                           type: number
                           format: float
                           example: 130.99
@@ -160,6 +165,7 @@ paths:
                           type: object
                           properties:
                             id:
+                              minimum: 1
                               type: integer
                               format: int32
                               example: 1
@@ -173,6 +179,7 @@ paths:
                           type: object
                           properties:
                             id:
+                              minimum: 1
                               type: integer
                               format: int32
                               example: 4
@@ -191,6 +198,7 @@ paths:
                       type: object
                       properties:
                         id:
+                          minimum: 1
                           type: integer
                           format: int32
                           example: 31
@@ -275,12 +283,12 @@ paths:
                   format: date-time
                   example: 2019-06-02T10:00:00.000Z
                 car_id:
-                  maximum: 0
+                  minimum: 1
                   type: integer
                   format: int32
                   example: 105
                 parking_lot_id:
-                  minimum: 0
+                  minimum: 1
                   type: integer
                   format: int32
                   example: 5
@@ -289,25 +297,3 @@ paths:
           description: parking spot created
         '400':
           description: invalid input
-    delete:
-      tags:
-        - admins
-      summary: delete a parking spot rental
-      description: Deletes a parking spot rental in the database
-      operationId: deleteParkingSpotRental
-      parameters:
-        - name: id
-          in: query
-          description: id of the parking spot rental
-          required: false
-          style: form
-          explode: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: parking spot deleted
-        '400':
-          description: invalid parking spot rental value

@@ -1,4 +1,10 @@
 /parking_lots:
   $ref: ./parking_lots.yaml
 /parking_spot_rentals:
-  $ref: /parking_spot_rentals.yaml
+  $ref: ./parking_spot_rentals.yaml
+/parking_spot_rentals/{parkingSpotId}:
+  $ref: ./parking_spot_rentals_id.yaml
+/cars:
+  $ref: ./cars.yaml
+/cars/{carId}:
+  $ref: ./cars_id.yaml

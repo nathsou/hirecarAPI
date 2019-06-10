@@ -47,7 +47,7 @@ class ParkingSpotRentalController extends MediaTypeController
 
     /**
      * parking_spot_rentals
-     * @Route("/parking_spot_rentals",methods={"DELETE"})
+     * @Route("/parking_spot_rentals/{id}",methods={"DELETE"})
      * condition="context.getMethod() in ['DELETE']
      */
     public function deleteParkingSpotRental(Request $request)

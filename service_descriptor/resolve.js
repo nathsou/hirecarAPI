@@ -20,6 +20,8 @@ function resolve_refs(path) {
         process.exit(1);
     }
 
+    const uri_path = path.substr(-3) === '_id' ? `${path.split('_id')[0]}/{id}` : path;
+
     const spec = `
 openapi: 3.0.0
 info:
@@ -27,7 +29,7 @@ info:
 tags:
     $ref: ./tags/index.yaml
 paths:
-    /${path}:
+    /${uri_path}:
         $ref: ${file}
     `;
 

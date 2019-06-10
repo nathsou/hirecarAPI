@@ -1,0 +1,22 @@
+delete:
+  tags:
+  - admins
+  summary: delete a parking spot rental
+  description: Deletes a parking spot rental in the database
+  operationId: deleteParkingSpotRental
+  parameters:
+  - name: id
+    in: path
+    description: id of the parking spot rental
+    required: true
+    style: simple
+    explode: true
+    schema:
+      minimum: 1
+      type: integer
+      format: int32
+  responses:
+    200:
+      description: parking spot deleted
+    400:
+      description: invalid parking spot rental id

@@ -14,12 +14,12 @@ properties:
     format: date-time
     example: 2019-06-02 10:00:00
   car_id:
-    maximum: 0
+    minimum: 1
     type: integer
     format: int32
     example: 105
   parking_lot_id:
-    minimum: 0
+    minimum: 1
     type: integer
     format: int32
     example: 5
