@@ -12,3 +12,7 @@
   $ref: ./users.yaml
 /users/{userId}:
   $ref: ./users_id.yaml
+/verify_paiement:
+  $ref: ./verify_paiement.yaml
+/car_rentals:
+  $ref: ./cars_rentals.yaml

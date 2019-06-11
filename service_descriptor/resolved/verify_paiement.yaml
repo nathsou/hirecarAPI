@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: HireCar API
+  description: HireCar API
+  contact:
+    email: hirecar@example.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /verify_paiement:
+    post:
+      summary: verify if the payement is done or not
+      description: >
+        the objectif of this method is to verify if the paiment is done on
+        paypal and if it is acceptep
+      operationId: veerify_paiement
+      requestBody:
+        description: >-
+          verify if the payement is done or not the information are given by
+          PayPal and have to be pass to the API
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - paymentID
+                - payerID
+              properties:
+                paymentID:
+                  type: string
+                payerID:
+                  type: string
+      responses:
+        '200':
+          description: the api return the answer given by paypal
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - orderID
+                properties:
+                  orderID:
+                    type: string
+        '400':
+          description: the paiment is not accepted
+          content:
+            application/json:
+              type: object
+              required:
+                - error
+              properties:
+                error:
+                  type: string
+                  example: given Paiement unvalide
