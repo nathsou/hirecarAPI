@@ -11,13 +11,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class SpecController extends MediaTypeController
 {
 
-    /**
-     * parking_lots
-     * @Route("/spec/parking_lots",methods={"GET"})
-     *  condition="context.getMethod() in ['GET']
-     */
-    public function getParkingLotsSpec(Request $request)
-    {
+    protected function sendSpec(Request $request, $file) {
         $mimes = $this->getMimes($request);
         $ext = 'json';
 
@@ -32,13 +26,82 @@ class SpecController extends MediaTypeController
         }
 
         $response = $this->file(
-            '../service_descriptor/resolved/parking_lots.'.$ext,
-            'parking_lots.'.$ext,
+            '../service_descriptor/resolved/'.$file.'.'.$ext,
+            $file.'.'.$ext,
             ResponseHeaderBag::DISPOSITION_INLINE
         );
 
         $response->headers->set("Content-Type", "application/".$ext);
 
         return $response;
+    }
+    /**
+     * parking_lots
+     * @Route("/spec/parking_lots",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getParkingLotsSpec(Request $request)
+    {
+        return $this->sendSpec($request,"parking_lots");
+    }
+
+    /**
+     * users
+     * @Route("/spec/users",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getUsersSpec(Request $request)
+    {
+        return $this->sendSpec($request,"users");
+    }
+
+    /**
+     * users_id
+     * @Route("/spec/users_id",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getUsersIDSpec(Request $request)
+    {
+        return $this->sendSpec($request,"users_id");
+    }
+
+    /**
+     * parking_spot_rentals
+     * @Route("/spec/parking_spot_rentals",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getParkingSpotRentalsSpec(Request $request)
+    {
+        return $this->sendSpec($request,"parking_spot_rentals");
+    }
+
+    /**
+     * parking_spot_rentals_id
+     * @Route("/spec/parking_spot_rentals_id",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getParkingSpotRentalsIDSpec(Request $request)
+    {
+        return $this->sendSpec($request,"parking_spot_rentals_id");
+    }
+
+    /**
+     * cars
+     * @Route("/spec/cars",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getCarsSpec(Request $request)
+    {
+        return $this->sendSpec($request,"cars");
+    }
+
+    /**
+     * cars_id
+     * @Route("/spec/cars_id",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getCarsIDSpec(Request $request)
+    {
+        return $this->sendSpec($request,"cars_id");
     }
 }
