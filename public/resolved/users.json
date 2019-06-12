@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HireCar API",
+    "description": "HireCar API",
+    "contact": { "email": "hirecar@example.com" },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [
+    { "name": "admins", "description": "Secured Admin-only calls" },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [ "admins" ],
+        "summary": "add a user",
+        "description": "Inserts a user in the database",
+        "operationId": "insertUser",
+        "requestBody": {
+          "description": "User to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "firstname",
+                  "lastname",
+                  "email",
+                  "phone",
+                  "password",
+                  "login_id"
+                ],
+                "type": "object",
+                "properties": {
+                  "firstname": { "type": "string", "example": "Marty" },
+                  "lastname": { "type": "string", "example": "McFly" },
+                  "email": { "type": "string", "example": "marty@delorean.com" },
+                  "phone": { "type": "string", "example": "0123456789" },
+                  "password": {
+                    "type": "string",
+                    "example": "$2a$10$5p/XjRv1Kw9OIqzg4t186eV1UxpYxFTyXR4KZmABZaxV/.QlAscNe"
+                  },
+                  "login_id": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "user created" },
+          "400": { "description": "invalid input" },
+          "409": { "description": "email address already used" }
+        }
+      }
+    }
+  }
+}

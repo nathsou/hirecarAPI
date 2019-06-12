@@ -31,8 +31,8 @@ function resolve_contents(spec, name) {
         const merged_json = beautify(results.resolved, null, 2, 80);
         const merged_yaml = YAML.safeDump(results.resolved);
 
-        fs.outputFileSync(`../resolved/${name}.json`, merged_json);
-        fs.outputFileSync(`../resolved/${name}.yaml`, merged_yaml);
+        fs.outputFileSync(`../../public/resolved/${name}.json`, merged_json);
+        fs.outputFileSync(`../../public/resolved/${name}.yaml`, merged_yaml);
 
         console.info(`resolved: ${name}`);
     });

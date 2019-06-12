@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HireCar API",
+    "description": "HireCar API",
+    "contact": { "email": "hirecar@example.com" },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [
+    { "name": "admins", "description": "Secured Admin-only calls" },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/cars/{id}": {
+      "put": {
+        "tags": [ "admins" ],
+        "summary": "update an existing car",
+        "description": "Updates an existing car in the database",
+        "operationId": "updateCar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the car",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": { "minimum": 1, "type": "integer", "format": "int32" }
+          }
+        ],
+        "requestBody": {
+          "description": "Car to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "model",
+                  "seats",
+                  "doors",
+                  "owner_id",
+                  "gearbox_id",
+                  "fuel_id",
+                  "price_per_day"
+                ],
+                "type": "object",
+                "properties": {
+                  "model": { "type": "string", "example": "Tesla Model S" },
+                  "seats": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 5
+                  },
+                  "doors": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 5
+                  },
+                  "owner_id": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 13
+                  },
+                  "gearbox_id": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 2
+                  },
+                  "fuel_id": {
+                    "minimum": 1,
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 2
+                  },
+                  "price_per_day": {
+                    "minimum": 1,
+                    "type": "number",
+                    "format": "float",
+                    "example": 130.99
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "car updated" },
+          "400": { "description": "invalid car id" }
+        }
+      },
+      "delete": {
+        "tags": [ "admins" ],
+        "summary": "delete a car",
+        "description": "Deletes a car in the database",
+        "operationId": "deleteCar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the car",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": { "minimum": 1, "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "car deleted" },
+          "400": { "description": "invalid car id" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: HireCar API
+  description: HireCar API
+  contact:
+    email: hirecar@example.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /verify_payment:
+    post:
+      summary: verify if the payment is done or not
+      description: |
+        Verifies that the payment was successful on paypal
+      operationId: verifyPayment
+      requestBody:
+        description: >-
+          verify if the payment is done or not, the information is given by
+          PayPal and needs to be passed to the API
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - paymentID
+                - payerID
+              properties:
+                paymentID:
+                  type: string
+                payerID:
+                  type: string
+      responses:
+        '200':
+          description: returns the response given by PayPal
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - orderID
+                properties:
+                  orderID:
+                    type: string
+        '400':
+          description: the payment was rejected
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                properties:
+                  error:
+                    type: string
+                    example: invalid payment received
