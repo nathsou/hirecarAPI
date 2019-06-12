@@ -7,10 +7,36 @@ const beautify = require('json-beautify');
 
 process.chdir('hirecar_api');
 
+// resolve each endpoint as a separate service descriptor
 fs.readdirSync('paths')
     .filter(file => file !== 'index.yaml')
     .map(path => path.split('.')[0])
     .forEach(path => resolve_refs(path));
+
+// output a service descriptor for the entire API
+resolve_contents(fs.readFileSync('index.yaml').toString(), 'index');
+
+function resolve_contents(spec, name) {
+    const root = YAML.safeLoad(spec);
+    const options = {
+        filter: ['relative', 'remote'],
+        loaderOptions: {
+            processContent: (res, callback) => {
+                callback(null, YAML.safeLoad(res.text));
+            }
+        }
+    };
+
+    resolve(root, options).then(results => {
+        const merged_json = beautify(results.resolved, null, 2, 80);
+        const merged_yaml = YAML.safeDump(results.resolved);
+
+        fs.outputFileSync(`../resolved/${name}.json`, merged_json);
+        fs.outputFileSync(`../resolved/${name}.yaml`, merged_yaml);
+
+        console.info(`resolved: ${name}`);
+    });
+}
 
 function resolve_refs(path) {
     const file = `./paths/${path}.yaml`;
@@ -33,23 +59,5 @@ paths:
         $ref: ${file}
     `;
 
-    const root = YAML.safeLoad(spec);
-    const options = {
-        filter: ['relative', 'remote'],
-        loaderOptions: {
-            processContent: (res, callback) => {
-                callback(null, YAML.safeLoad(res.text));
-            }
-        }
-    };
-
-    resolve(root, options).then(results => {
-        const merged_json = beautify(results.resolved, null, 2, 80);
-        const merged_yaml = YAML.safeDump(results.resolved);
-
-        fs.outputFileSync(`../resolved/${path}.json`, merged_json);
-        fs.outputFileSync(`../resolved/${path}.yaml`, merged_yaml);
-
-        console.info(`resolved: ${path}`);
-    });
+    resolve_contents(spec, path);
 }

@@ -77,7 +77,11 @@
             "required": false,
             "style": "form",
             "explode": true,
-            "schema": { "type": "string", "format": "date-time" }
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2015-10-21T17:32:28Z"
+            }
           },
           {
             "name": "end_date",
@@ -86,7 +90,11 @@
             "required": false,
             "style": "form",
             "explode": true,
-            "schema": { "type": "string", "format": "date-time" }
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2019-06-11-T10:02:47Z"
+            }
           }
         ],
         "responses": {

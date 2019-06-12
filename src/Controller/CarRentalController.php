@@ -43,6 +43,10 @@ class CarRentalController extends MediaTypeController
             $car_rental->deleteCarRentalRequest($id);
             return $this->mediaTypeConverter($request);
         }
-        return new Response('', Response::HTTP_BAD_REQUEST);
+
+        return $this->handleResponse($request, [
+            "msg" => "",
+            "status" => Response::HTTP_BAD_REQUEST
+        ]);
     }
 }

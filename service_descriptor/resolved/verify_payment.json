@@ -18,13 +18,13 @@
     }
   ],
   "paths": {
-    "/verify_paiement": {
+    "/verify_payment": {
       "post": {
-        "summary": "verify if the payement is done or not",
-        "description": "the objectif of this method is to verify if the paiment is done on paypal and if it is acceptep\n",
-        "operationId": "veerify_paiement",
+        "summary": "verify if the payment is done or not",
+        "description": "Verifies that the payment was successful on paypal\n",
+        "operationId": "verifyPayment",
         "requestBody": {
-          "description": "verify if the payement is done or not the information are given by PayPal and have to be pass to the API",
+          "description": "verify if the payment is done or not, the information is given by PayPal and needs to be passed to the API",
           "content": {
             "application/json": {
               "schema": {
@@ -40,7 +40,7 @@
         },
         "responses": {
           "200": {
-            "description": "the api return the answer given by paypal",
+            "description": "returns the response given by PayPal",
             "content": {
               "application/json": {
                 "schema": {
@@ -52,13 +52,18 @@
             }
           },
           "400": {
-            "description": "the paiment is not accepted",
+            "description": "the payment was rejected",
             "content": {
               "application/json": {
-                "type": "object",
-                "required": [ "error" ],
-                "properties": {
-                  "error": { "type": "string", "example": "given Paiement unvalide" }
+                "schema": {
+                  "type": "object",
+                  "required": [ "error" ],
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "invalid payment received"
+                    }
+                  }
                 }
               }
             }

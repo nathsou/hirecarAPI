@@ -80,7 +80,6 @@ paths:
           schema:
             type: string
             format: date-time
-            example: '2015-10-21T17:32:28Z'
         - name: end_date
           in: query
           description: the end date of the parking spot rental circle
@@ -90,7 +89,6 @@ paths:
           schema:
             type: string
             format: date-time
-            example: '2019-06-11-T10:02:47Z'
       responses:
         '200':
           description: search results matching criteria

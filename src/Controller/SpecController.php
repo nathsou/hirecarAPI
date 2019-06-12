@@ -104,4 +104,24 @@ class SpecController extends MediaTypeController
     {
         return $this->sendSpec($request,"cars_id");
     }
+
+    /**
+     * cars_id
+     * @Route("/spec/car_rentals",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function getCarRentalsSpec(Request $request)
+    {
+        return $this->sendSpec($request,"car_rentals");
+    }
+
+    /**
+     * cars_id
+     * @Route("/spec/verify_payment",methods={"GET"})
+     *  condition="context.getMethod() in ['GET']
+     */
+    public function verifyPaymentSpec(Request $request)
+    {
+        return $this->sendSpec($request,"verify_payment");
+    }
 }

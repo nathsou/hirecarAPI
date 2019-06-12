@@ -1,0 +1,245 @@
+openapi: 3.0.0
+info:
+  title: HireCar API
+  description: HireCar API
+  contact:
+    email: hirecar@example.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /cars:
+    get:
+      tags:
+        - developers
+      summary: searches cars
+      description: |
+        Query cars filtered by some common criteria
+      operationId: searchCars
+      parameters:
+        - name: min_price
+          in: query
+          description: the minimum price of the car per day
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: number
+            format: float
+        - name: max_price
+          in: query
+          description: the maximum price of the car per day
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: number
+            format: float
+        - name: min_seats
+          in: query
+          description: the minimum seats of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+        - name: min_doors
+          in: query
+          description: the minimum doors of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+        - name: id
+          in: query
+          description: id of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+        - name: gearbox
+          in: query
+          description: gearbox of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: fuel
+          in: query
+          description: fuel of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: model of the car
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: owner_id
+          in: query
+          description: id of the car's owner
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - id
+                    - model
+                    - seats
+                    - doors
+                    - owner_id
+                    - price_per_day
+                    - gearbox
+                    - fuel
+                  type: object
+                  properties:
+                    id:
+                      minimum: 1
+                      type: integer
+                      format: int32
+                      example: 105
+                    model:
+                      type: string
+                      example: Tesla Model S
+                    seats:
+                      minimum: 1
+                      type: integer
+                      format: int32
+                      example: 5
+                    doors:
+                      minimum: 1
+                      type: integer
+                      format: int32
+                      example: 5
+                    owner_id:
+                      minimum: 1
+                      type: integer
+                      format: int32
+                      example: 13
+                    price_per_day:
+                      minimum: 1
+                      type: number
+                      format: float
+                      example: 130.99
+                    gearbox:
+                      required:
+                        - id
+                        - type
+                      type: object
+                      properties:
+                        id:
+                          minimum: 1
+                          type: integer
+                          format: int32
+                          example: 1
+                        type:
+                          type: string
+                          example: Automatique
+                    fuel:
+                      required:
+                        - id
+                        - type
+                      type: object
+                      properties:
+                        id:
+                          minimum: 1
+                          type: integer
+                          format: int32
+                          example: 4
+                        type:
+                          type: string
+                          example: Électrique
+        '400':
+          description: incorrect parameters
+    post:
+      tags:
+        - admins
+      summary: add a car
+      description: Inserts a car in the database
+      operationId: insertCar
+      requestBody:
+        description: Car to add
+        content:
+          application/json:
+            schema:
+              required:
+                - model
+                - seats
+                - doors
+                - owner_id
+                - gearbox_id
+                - fuel_id
+                - price_per_day
+              type: object
+              properties:
+                model:
+                  type: string
+                  example: Tesla Model S
+                seats:
+                  minimum: 1
+                  type: integer
+                  format: int32
+                  example: 5
+                doors:
+                  minimum: 1
+                  type: integer
+                  format: int32
+                  example: 5
+                owner_id:
+                  minimum: 1
+                  type: integer
+                  format: int32
+                  example: 13
+                gearbox_id:
+                  minimum: 1
+                  type: integer
+                  format: int32
+                  example: 2
+                fuel_id:
+                  minimum: 1
+                  type: integer
+                  format: int32
+                  example: 2
+                price_per_day:
+                  minimum: 1
+                  type: number
+                  format: float
+                  example: 130.99
+      responses:
+        '201':
+          description: car created
+        '400':
+          description: invalid input

@@ -2,17 +2,17 @@
   $ref: ./parking_lots.yaml
 /parking_spot_rentals:
   $ref: ./parking_spot_rentals.yaml
-/parking_spot_rentals/{parkingSpotId}:
+/parking_spot_rentals/{id}:
   $ref: ./parking_spot_rentals_id.yaml
 /cars:
   $ref: ./cars.yaml
-/cars/{carId}:
+/cars/{id}:
   $ref: ./cars_id.yaml
 /users:
   $ref: ./users.yaml
-/users/{userId}:
+/users/{id}:
   $ref: ./users_id.yaml
-/verify_paiement:
-  $ref: ./verify_paiement.yaml
+/verify_payment:
+  $ref: ./verify_payment.yaml
 /car_rentals:
-  $ref: ./cars_rentals.yaml
+  $ref: ./car_rentals.yaml

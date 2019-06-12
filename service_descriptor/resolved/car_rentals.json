@@ -18,11 +18,11 @@
     }
   ],
   "paths": {
-    "/cars_rentals": {
+    "/car_rentals": {
       "get": {
         "tags": [ "developers" ],
-        "summary": "searches cars",
-        "description": "the get the car which can be rented and selecte them thanks to one of these parameter\n",
+        "summary": "searches rentable cars",
+        "description": "search rentable cars and filter them thanks to those parameters\n",
         "operationId": "getCarRentals",
         "parameters": [
           {
@@ -73,7 +73,7 @@
         ],
         "responses": {
           "200": {
-            "description": "return the selected car",
+            "description": "returns car rental(s) corresponding to the parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -285,9 +285,9 @@
       },
       "delete": {
         "tags": [ "admins" ],
-        "summary": "remove a rental cars",
-        "description": "remove the rent of a car",
-        "operationId": "removeRentalCars",
+        "summary": "removes a car rental",
+        "description": "remove a car rental",
+        "operationId": "removeCarRentals",
         "parameters": [
           {
             "name": "id",
@@ -300,7 +300,7 @@
           }
         ],
         "responses": {
-          "200": { "description": "rental car delete" },
+          "200": { "description": "deletes a car rental" },
           "400": { "description": "invalid input" }
         }
       }
