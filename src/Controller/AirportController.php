@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AirportController extends MediaTypeController
 {
+
     /**
      * airports
      * @Route("/airports",methods={"GET"})

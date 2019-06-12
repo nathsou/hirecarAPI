@@ -21,6 +21,8 @@ class CarController extends MediaTypeController
         parent::__construct();
     }
 
+    protected $spec_name = "cars";
+
     /**
      * cars
      * @Route("/cars",methods={"GET"})

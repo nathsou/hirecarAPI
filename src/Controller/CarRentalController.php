@@ -16,6 +16,8 @@ class CarRentalController extends MediaTypeController
         parent::__construct();
     }
 
+    protected $spec_name = "car_rentals";
+
     /**
      * car_rentals
      * @Route("/car_rentals",methods={"GET"})

@@ -14,6 +14,8 @@ class UserController extends MediaTypeController
         parent::__construct();
     }
 
+    protected $spec_name = "users";
+
     /**
      * users
      * @Route("/users",methods={"POST"})

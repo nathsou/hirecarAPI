@@ -14,6 +14,8 @@ class LoginController extends MediaTypeController
         parent::__construct();
     }
 
+    protected $spec_name = "login";
+
     /**
      * login
      * @Route("/login",methods={"POST"})

@@ -39,8 +39,8 @@ class CarRental extends RequestBuilder
         }
 
         return [
-            "error_msg" => "incorrect parameters",
-            "error_status" => Response::HTTP_BAD_REQUEST
+            "msg" => "incorrect parameters",
+            "status" => Response::HTTP_BAD_REQUEST
         ];
     }
 

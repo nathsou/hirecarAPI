@@ -15,6 +15,8 @@ class ParkingSpotRentalController extends MediaTypeController
         parent::__construct();
     }
 
+    protected $spec_name = "parking_spot_rentals";
+
     /**
      * parking_spot_rentals
      * @Route("/parking_spot_rentals",methods={"POST"})
