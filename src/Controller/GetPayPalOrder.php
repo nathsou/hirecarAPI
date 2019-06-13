@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Mail;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +33,9 @@ class GetPayPalOrder extends MediaTypeController
             $payer_id = $payment['payerID'];
             $response = $paypal->executePayment($payment_ID, $payer_id);
             $response = json_decode($response);
-            //TODO complete the action when the payment is accepted bisous
+            $mail = new Mail();
+            $mail->sendMessage("paiement accepter",$request->get("mail"),$request->get('name'),
+                '<h4>le paiement de '+$request->get('price')+' à bien été accepté</h4>');
             return $this->json($response);
         }
 
