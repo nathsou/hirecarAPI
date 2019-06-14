@@ -9,14 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 class ParkingLot extends RequestBuilder implements ParkingLotInterface
 {
 
+    private $test_tolerant_reader = false;
+
     public function getParkingLotsRequest(Request $request)
     {
         $this->query = "SELECT * FROM `parking_lot`";
-
-        // $this->query .= "LEFT JOIN ( (SELECT (count(parking_lot_id)) ";
-        // $this->query .= "AS countPlaceTaken, parking_lot_id FROM rent_parking_spot ";
-        // $this->query .= "GROUP BY parking_lot_id)) ";
-        // $this->query .= "AS countTable on countTable.parking_lot_id=id ";
 
         $this->selectByCoords(
             $request->query->get('center_lat'),
@@ -40,10 +37,16 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
 
         $this->selectByAirportName($request->get("airport_name"));
 
+        if ($this->test_tolerant_reader) {
+            $request->headers->set("Accept", "application/yaml");
+        }
+
         if ($this->valid_request) {
-
-            $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
-
+            if ($this->test_tolerant_reader) {
+                $parking_lots = $this->fetchIdDataUpdated($this->execQuery(), ["airport"]);
+            } else {
+                $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
+            }
             return ['parking_lots' => $parking_lots];
         }
 
@@ -85,7 +88,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
                     "status" => Response::HTTP_BAD_REQUEST
                 ];
         }
-
     }
 
     private function selectByCoords($lat, $lng, $radius)
