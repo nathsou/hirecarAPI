@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Mail;
 use App\Entity\ParkingSpotRental;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,12 @@ class ParkingSpotRentalController extends MediaTypeController
             $data["car_id"],
             $data["parking_lot_id"]
         );
-
+        $mail = new Mail();
+        $mail->sendMessage(
+            "parking rent register",
+            $data["email"],
+            $data["name"],
+            "votre réservation de place de parking "+$data["start_date"]+" à "+$data["end_date"] +" à bien été prix en compte");
         return $this->handleResponse($request, $res);
     }
 
