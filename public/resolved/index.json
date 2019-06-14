@@ -347,7 +347,15 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "required": [ "id", "start_date", "end_date", "car", "parking_lot" ],
+                    "required": [
+                      "id",
+                      "start_date",
+                      "end_date",
+                      "car",
+                      "parking_lot",
+                      "email",
+                      "name"
+                    ],
                     "type": "object",
                     "properties": {
                       "id": {
@@ -516,7 +524,12 @@
                             }
                           }
                         }
-                      }
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "john.smith@hostname.com"
+                      },
+                      "name": { "type": "string", "example": "Smith" }
                     }
                   }
                 }
@@ -1048,6 +1061,35 @@
         "summary": "verify if the payment is done or not",
         "description": "Verifies that the payment was successful on paypal\n",
         "operationId": "verifyPayment",
+        "parameters": [
+          {
+            "name": "price",
+            "in": "query",
+            "description": "the price of the paiement",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": { "minimum": 0, "type": "number", "format": "float" }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "the name of the personne who are doing the reservation",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "mail",
+            "in": "query",
+            "description": "the mail of the personne who are doing the reservation",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": { "type": "string", "format": "email" }
+          }
+        ],
         "requestBody": {
           "description": "verify if the payment is done or not, the information is given by PayPal and needs to be passed to the API",
           "content": {
@@ -1481,7 +1523,15 @@
         }
       },
       "ParkingSpotRental": {
-        "required": [ "id", "start_date", "end_date", "car", "parking_lot" ],
+        "required": [
+          "id",
+          "start_date",
+          "end_date",
+          "car",
+          "parking_lot",
+          "email",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1643,7 +1693,9 @@
                 }
               }
             }
-          }
+          },
+          "email": { "type": "string", "example": "john.smith@hostname.com" },
+          "name": { "type": "string", "example": "Smith" }
         }
       },
       "Car": {

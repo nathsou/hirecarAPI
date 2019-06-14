@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ParkingLotController extends MediaTypeController
 {
 
-    protected $spec_name = "parking_lots";
+    protected $endpoint = "parking_lots";
     /**
      * parking_lots
      * @Route("/parking_lots",methods={"GET"})
@@ -26,7 +26,6 @@ class ParkingLotController extends MediaTypeController
     {
         $pl = new ParkingLot();
         return $this->handleResponse($request, $pl->getParkingLotsRequest($request));
-
     }
     /**
      * parking_lots

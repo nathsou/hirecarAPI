@@ -105,6 +105,8 @@ paths:
                     - end_date
                     - car
                     - parking_lot
+                    - email
+                    - name
                   type: object
                   properties:
                     id:
@@ -256,6 +258,12 @@ paths:
                               type: number
                               format: float
                               example: 2.54
+                    email:
+                      type: string
+                      example: john.smith@hostname.com
+                    name:
+                      type: string
+                      example: Smith
         '400':
           description: incorrect parameters
     post:

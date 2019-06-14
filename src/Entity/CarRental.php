@@ -20,6 +20,7 @@ class CarRental extends RequestBuilder
         );
 
         $this->selectById($request->query->get("id"));
+        $this->selectByCarId($request->query->get("car_id"));
         $this->selectByAirportId($request->query->get("airport_id"));
         $this->selectByUserId($request->query->get("user_id"));
         $this->selectByOwnerId($request->query->get("owner_id"));
@@ -50,6 +51,15 @@ class CarRental extends RequestBuilder
             $this->valid_request = true;
             $this->addWhereCondition("id = :id");
             $this->query_parameters["id"] = $id;
+        }
+    }
+
+    private function selectByCarId($id)
+    {
+        if (isset($id) && is_numeric($id)) {
+            $this->valid_request = true;
+            $this->addWhereCondition(":car_id IN (SELECT car_id FROM rent_parking_spot as s WHERE s.id = parking_spot_id)");
+            $this->query_parameters["car_id"] = $id;
         }
     }
 
