@@ -8,7 +8,7 @@ use App\Entity\Mail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class serviceDescriptor extends MediaTypeController
+class ServiceDescriptor extends MediaTypeController
 {
     /**
      * cars
