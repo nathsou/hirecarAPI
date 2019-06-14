@@ -314,6 +314,8 @@ paths:
                     - end_date
                     - car
                     - parking_lot
+                    - email
+                    - name
                   type: object
                   properties:
                     id:
@@ -398,6 +400,12 @@ paths:
                               type: string
                               example: Électrique
                     parking_lot: *ref_0
+                    email:
+                      type: string
+                      example: john.smith@hostname.com
+                    name:
+                      type: string
+                      example: Smith
         '400':
           description: incorrect parameters
     post:
