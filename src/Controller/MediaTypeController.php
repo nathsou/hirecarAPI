@@ -17,10 +17,44 @@ use Symfony\Component\Yaml\Yaml;
 
 class MediaTypeController extends AbstractController
 {
-    protected $spec_name = null;
+    protected $endpoint = null;
+    protected $linked = [];
+    protected $actions = [];
+    protected $host;
 
     public function __construct()
-    { }
+    {
+        $this->host = $_SERVER['HTTP_HOST'];
+
+        $this->linked = [
+            "cars" => [
+                "car_rentals",
+                "parking_lots"
+            ]
+        ];
+
+        $this->actions = [
+            "get_cars" => [
+                "method" => "GET",
+                "uri" => "/cars"
+            ],
+            "delete_car" => [
+                "method" => "DELETE",
+                "uri" => "/cars/:id",
+                "params" => ["id"]
+            ],
+            "update_car" => [
+                "method" => "PUT",
+                "uri" => "/cars/:id",
+                "params" => ["id"]
+            ],
+            "get_car_rentals" => [
+                "method" => "GET",
+                "uri" => "/car_rentals?car_id=:id",
+                "params" => ["id"]
+            ]
+        ];
+    }
 
     protected function getMimes(Request $request) {
         return  explode(',',  explode(";", trim($request->headers->get("accept")))[0]);
@@ -63,6 +97,44 @@ class MediaTypeController extends AbstractController
         return $this->json($data);
     }
 
+    protected function generateActions(array $actions_keys, array $params = [])
+    {
+        $actions = [];
+
+        foreach ($actions_keys as $key) {
+            $action = $this->actions[$key];
+            $actions[$key] = $action;
+            //$endpoint = "/" . explode("/", $action["uri"])[1] . "/";
+            $uri = $action["uri"];
+            if (array_key_exists("params", $action)) {
+                foreach ($action["params"] as $param) {
+                    $uri = str_replace(":" . $param, $params[$param], $uri);
+                }
+                unset($actions[$key]["params"]);
+            }
+            // $actions[$key]["description"] = $this->host . "/spec". $endpoint;
+            $actions[$key]["uri"] = $this->host . $uri;
+        }
+
+        return $actions;
+    }
+
+    protected function includeLinkedServices(array $data)
+    {
+        if (array_key_exists($this->endpoint, $this->linked)) {
+            $data["linked"] = [];
+
+            foreach ($this->linked[$this->endpoint] as $endpoint) {
+                $service = [];
+                $service["description"] = $this->host . "/spec/" . $endpoint;
+                $service["uri"] = $this->host . "/" . $endpoint;
+                $data["linked"][$endpoint] = $service;
+            }
+        }
+
+        return $data;
+    }
+
     protected function handleResponse($request, array $data) {
         $res = null;
         if (
@@ -71,12 +143,12 @@ class MediaTypeController extends AbstractController
         ) {
             $res = new Response($data["msg"], $data["status"]);
         } else {
-            $res = $this->mediaTypeConverter($request, $data);
+            $res = $this->mediaTypeConverter($request, $this->includeLinkedServices($data));
         }
 
         // provide a service descriptor in the LINK header if available
-        if ($this->spec_name != null) {
-            $path = $_SERVER['HTTP_HOST']."/spec/".$this->spec_name;
+        if ($this->endpoint != null) {
+            $path = $this->host."/spec/".$this->endpoint;
             $res->headers->set("Link", "<" . $path . ">; rel=describedby");
         }
 

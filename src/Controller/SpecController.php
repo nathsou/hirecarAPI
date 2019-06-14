@@ -26,7 +26,7 @@ class SpecController extends MediaTypeController
         }
 
         $response = $this->file(
-            '../service_descriptor/resolved/'.$file.'.'.$ext,
+            '../public/resolved/'.$file.'.'.$ext,
             $file.'.'.$ext,
             ResponseHeaderBag::DISPOSITION_INLINE
         );

@@ -13,7 +13,7 @@ use App\Entity\PayPalPayment;
 class GetPayPalOrder extends MediaTypeController
 {
 
-    protected $spec_name = "verify_payment";
+    protected $endpoint = "verify_payment";
     /**
      * verify_payment
      * @Route("/verify_payment")

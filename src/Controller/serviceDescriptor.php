@@ -7,14 +7,14 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class descriptorService extends MediaTypeController
+class serviceDescriptor extends MediaTypeController
 {
     /**
      * cars
      * @Route("/",methods={"GET"})
      *  condition="context.getMethod() in ['GET']
      */
-    public function descriptionService(Request $request){
+    public function serviceDescription(Request $request){
         if(in_array("text/html",$this->getMimes($request)))
             return $this->render('swaggerAPI.twig',["serveurName"=>$_SERVER['HTTP_HOST']]);
         else{

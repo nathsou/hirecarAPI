@@ -21,7 +21,21 @@ class CarController extends MediaTypeController
         parent::__construct();
     }
 
-    protected $spec_name = "cars";
+    protected $endpoint = "cars";
+
+    private function includeCarActions(array $data)
+    {
+        if (array_key_exists("cars", $data)) {
+            $cars = $data["cars"];
+            foreach (array_keys($cars) as $car) {
+                $actions = $this->generateActions(["delete_car", "update_car", "get_car_rentals"], $cars[$car]);
+                $cars[$car]["actions"] = $actions;
+            }
+            return ["cars" => $cars];
+        }
+
+        return $data;
+    }
 
     /**
      * cars
@@ -31,7 +45,7 @@ class CarController extends MediaTypeController
     public function getCar(Request $request)
     {
         $car = new Car();
-        return $this->handleResponse($request, $car->getCarsRequest($request));
+        return $this->handleResponse($request, $this->includeCarActions($car->getCarsRequest($request)));
     }
 
     /**
@@ -126,7 +140,10 @@ class CarController extends MediaTypeController
                 $car = new Car();
                 $car->updateCarRequest($model, $seats, $doors, $gearbox_id, $fuel_id, $price_per_day, $id);
             }
-            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, [
+                "msg" => "car updated",
+                "status" => Response::HTTP_ACCEPTED
+            ]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
@@ -145,7 +162,10 @@ class CarController extends MediaTypeController
         ) {
             $car = new Car();
             $car->deleteCarRequest($id);
-            return $this->mediaTypeConverter($request, ["etat" => "ok"]);
+            return $this->mediaTypeConverter($request, [
+                "msg" => "car removed",
+                "status" => Response::HTTP_OK
+            ]);
         }
         return new Response('', Response::HTTP_BAD_REQUEST);
     }

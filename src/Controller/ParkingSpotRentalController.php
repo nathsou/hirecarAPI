@@ -15,7 +15,7 @@ class ParkingSpotRentalController extends MediaTypeController
         parent::__construct();
     }
 
-    protected $spec_name = "parking_spot_rentals";
+    protected $endpoint = "parking_spot_rentals";
 
     /**
      * parking_spot_rentals

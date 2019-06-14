@@ -14,7 +14,7 @@ class UserController extends MediaTypeController
         parent::__construct();
     }
 
-    protected $spec_name = "users";
+    protected $endpoint = "users";
 
     /**
      * users
