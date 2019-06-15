@@ -23,6 +23,7 @@ class ParkingSpotRentalController extends MediaTypeController
      * @Route("/parking_spot_rentals",methods={"POST"})
      *  condition="context.getMethod() in ['POST']
      */
+
     public function insertParkingSpotRental(Request $request)
     {
         $data = $this->inputMediaTypeConverter($request);
@@ -34,11 +35,20 @@ class ParkingSpotRentalController extends MediaTypeController
             $data["parking_lot_id"]
         );
         $mail = new Mail();
+        $name = $data["firstname"] . " " . $data["lastname"];
+        $subject = "Confirmation de location";
+        $draft =
+            "<p>Bonjour $name,<br/>
+                Votre réservation de place de parking du " . $data["start_date"] . " au  " . $data["end_date"]  . " a bien été prise en compte.<br/><br/>
+                Bien cordialement, <br/>
+                L'équipe HireCar.
+            </p>";
         $mail->sendMessage(
-            "parking rent register",
+            $subject,
             $data["email"],
-            $data["name"],
-            "votre réservation de place de parking "+$data["start_date"]+" à "+$data["end_date"] +" à bien été prix en compte");
+            $name,
+            $draft
+        );
         return $this->handleResponse($request, $res);
     }
 

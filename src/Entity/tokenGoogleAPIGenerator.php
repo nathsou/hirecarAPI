@@ -14,8 +14,10 @@ function getClient()
 {
     $client = new Google_Client();
     $client->setApplicationName('Gmail API PHP Quickstart');
-    $client->setScopes(Google_Service_Gmail::GMAIL_SEND);
-    $client->setAuthConfig(__DIR__.'/../../credentials.json');
+    $client->setScopes([
+        Google_Service_Gmail::MAIL_GOOGLE_COM
+    ]);
+    $client->setAuthConfig(__DIR__ . '/../../credentials.json');
     $client->setAccessType('offline');
     $client->setPrompt('select_account consent');
 
@@ -47,7 +49,7 @@ function getClient()
 
             // Check to see if there was an error.
             if (array_key_exists('error', $accessToken)) {
-                throw new Exception(join(', ', $accessToken));
+                print("error: " + join(', ', $accessToken));
             }
         }
         // Save the token to a file.

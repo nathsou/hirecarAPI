@@ -3,15 +3,16 @@
 .DS_Store
 .env
 .env.test
-./.env
 /.env.local
 /.env.local.php
 /.env.*.local
 /public/bundles/
 /var/
 /vendor/
+credentials.json
 ./credentials.json
-./src/Entity/token.json
+/src/Entity/token.json
+
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
