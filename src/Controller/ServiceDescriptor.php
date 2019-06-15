@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Entity\Mail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
