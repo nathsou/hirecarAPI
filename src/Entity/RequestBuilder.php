@@ -27,13 +27,8 @@ abstract class RequestBuilder
 
         if ($prep->errorCode() != "00000") {
             return [
-<<<<<<< HEAD
-                "error_msg" =>  "Incorrect SQL request: " . $prep->errorInfo()[2],
-                "error_status" => Response::HTTP_BAD_REQUEST
-=======
-              "msg" =>  "Incorrect SQL request: " . $prep->errorInfo()[2],
+                "msg" =>  "Incorrect SQL request: " . $prep->errorInfo()[2],
                 "status" => Response::HTTP_BAD_REQUEST
->>>>>>> 4660b19d1f3e45842c7953b3ba7659c0a4d64d53
             ];
         }
 
