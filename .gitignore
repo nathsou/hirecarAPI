@@ -11,7 +11,6 @@
 /vendor/
 credentials.json
 ./credentials.json
-/src/Entity/token.json
 
 ###< symfony/framework-bundle ###
 
@@ -27,3 +26,4 @@ credentials.json
 ### idea file
 /.idea/
 /service_descriptor/node_modules/
+src/Entity/token.json

@@ -36,7 +36,7 @@ class ParkingSpotRentalController extends MediaTypeController
         );
         $mail = new Mail();
         $name = $data["firstname"] . " " . $data["lastname"];
-        $subject = "Confirmation de location";
+        $subject = "bob";
         $draft =
             "<p>Bonjour $name,<br/>
                 Votre réservation de place de parking du " . $data["start_date"] . " au  " . $data["end_date"]  . " a bien été prise en compte.<br/><br/>
@@ -44,10 +44,10 @@ class ParkingSpotRentalController extends MediaTypeController
                 L'équipe HireCar.
             </p>";
         $mail->sendMessage(
-            $subject,
+            "bob",
             $data["email"],
             $name,
-            $draft
+            "alice"
         );
         return $this->handleResponse($request, $res);
     }
