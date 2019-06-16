@@ -9,8 +9,9 @@
 /public/bundles/
 /var/
 /vendor/
+credentials.json
 ./credentials.json
-./src/Entity/token.json
+/src/Entity/token.json
 
 ###< symfony/framework-bundle ###
 

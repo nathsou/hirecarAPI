@@ -15,8 +15,7 @@ function getClient()
     $client = new Google_Client();
     $client->setApplicationName('Gmail API PHP Quickstart');
     $client->setScopes([
-        Google_Service_Gmail::MAIL_GOOGLE_COM,
-        Google_Service_Calendar::CALENDAR
+        Google_Service_Gmail::MAIL_GOOGLE_COM
     ]);
     $client->setAuthConfig(__DIR__ . '/../../credentials.json');
     $client->setAccessType('offline');
