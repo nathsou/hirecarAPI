@@ -6,7 +6,7 @@ post:
   parameters:
     - name: price
       in: query
-      description: the price of the paiement
+      description: the payment amount
       required: true
       style: form
       explode: true
@@ -16,7 +16,7 @@ post:
         format: float
     - name: name
       in: query
-      description: the name of the personne who are doing the reservation
+      description: the name of the person who is doing the reservation
       required: true
       style: form
       explode: true
@@ -24,7 +24,7 @@ post:
         type: string
     - name: mail
       in: query
-      description: the mail of the personne who are doing the reservation
+      description: the mail of the person who is doing the reservation
       required: true
       style: form
       explode: true

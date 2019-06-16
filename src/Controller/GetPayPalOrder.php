@@ -34,8 +34,8 @@ class GetPayPalOrder extends MediaTypeController
             $response = $paypal->executePayment($payment_ID, $payer_id);
             $response = json_decode($response);
             $mail = new Mail();
-            $mail->sendMessage("paiement accepter",$request->get("mail"),$request->get('name'),
-                '<h4>le paiement de '+$request->get('price')+' à bien été accepté</h4>');
+            $mail->sendMessage("Paiement HireCar bien accepté",$request->get("mail"),$request->get('name'),
+                '<h4>le paiement de '+$request->get('price')+' a bien été accepté</h4>');
             return $this->json($response);
         }
 
