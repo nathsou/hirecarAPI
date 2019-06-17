@@ -7,7 +7,7 @@ use Google_Client;
 use Google_Service_Gmail;
 
 
-class Mail
+class Mail implements IMail
 {
     private $client;
     private $serviceGoogle;
