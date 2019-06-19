@@ -73,45 +73,6 @@ abstract class RequestBuilder
                         $response[$idx][$key_name] = $this->execQuery();
                         unset($response[$idx][$key]);
 
-                        if ($depth > 0) {
-                            $res = $this->fetchIdData($response[$idx][$key_name], $tables, $depth - 1);
-                            if (count($res) == 1) {
-                                $response[$idx][$key_name] = $res[0];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $response;
-    }
-
-    protected function fetchIdDataUpdated(array $response, array $tables, int $depth = 1)
-    {
-
-        if ($depth > 0) {
-            foreach ($response as $idx => $data) {
-                foreach ($data as $key => $val) {
-                    if (substr($key, -3) == '_id') {
-                        $key_name = substr($key, 0, strlen($key) - 3);
-                        $table_name = '';
-                        if (in_array($key_name, $tables)) {
-                            $table_name = $key_name;
-                        } else if (array_key_exists($key_name, $tables)) {
-                            $table_name = $tables[$key_name];
-                        } else {
-                            continue;
-                        }
-
-                        $this->query_parameters = [];
-                        $this->first_where_condition = true;
-                        $this->query = "SELECT * FROM " . $table_name;
-                        $this->addWhereCondition("id = :id");
-                        $this->query_parameters["id"] = $val;
-                        $response[$idx][$key_name] = $this->execQuery();
-                        unset($response[$idx][$key]);
-
                         if ($this->test_tolerant_reader) {
                             if ($tables[0] === "airport") {
                                 $response[$idx]['capacity'] = null;

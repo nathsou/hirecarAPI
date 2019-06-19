@@ -42,11 +42,7 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         }
 
         if ($this->valid_request) {
-            if ($this->test_tolerant_reader) {
-                $parking_lots = $this->fetchIdDataUpdated($this->execQuery(), ["airport"]);
-            } else {
-                $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
-            }
+            $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
             return ['parking_lots' => $parking_lots];
         }
 
