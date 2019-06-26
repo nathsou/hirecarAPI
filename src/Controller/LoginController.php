@@ -31,8 +31,6 @@ class LoginController extends MediaTypeController
             switch ($login_type) {
                 case "Google":
                     return $this->socialMediaSignIn($request);
-                case "Facebook":
-                    return $this->socialMediaSignIn($request);
                 default:
                     return $this->getUserHash($request);
             }
