@@ -59,7 +59,8 @@ class ParkingLotController extends MediaTypeController
                 isset($airport_id) && is_numeric($airport_id)
             ) {
                 $requestDB = new ParkingLot();
-                return $this->handleResponse($request,
+                return $this->handleResponse(
+                    $request,
                     $requestDB->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
                 );
             }
@@ -69,5 +70,34 @@ class ParkingLotController extends MediaTypeController
             "msg" => 'invalid input',
             "status" => Response::HTTP_BAD_REQUEST
         ]);
+    }
+
+    /**
+     * parking_lots
+     * @Route("/parking_lots/{id}",methods={"DELETE"})
+     * condition="context.getMethod() in ['DELETE']
+     */
+    public function deleteParkingLot(Request $request)
+    {
+
+        $id = $request->get('id');
+        if (
+            isset($id) && is_numeric($id)
+        ) {
+            $pl = new ParkingLot();
+            if ($pl->checkParkingSpotRental($id) === 0) {
+                $pl->deleteParkingLotRequest($id);
+                return $this->mediaTypeConverter($request, [
+                    "msg" => "parking lot removed",
+                    "status" => Response::HTTP_OK
+                ]);
+            } else {
+                return $this->handleResponse($request, [
+                    "msg" => "rent parking spot on parking lot",
+                    "status" => Response::HTTP_CONFLICT
+                ]);
+            }
+        }
+        return new Response('', Response::HTTP_BAD_REQUEST);
     }
 }

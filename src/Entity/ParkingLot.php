@@ -79,6 +79,26 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         }
     }
 
+    public function checkParkingSpotRental($id)
+    {
+        $db = SModel::getInstance();
+        $query = "SELECT DISTINCT id FROM rent_parking_spot WHERE parking_lot_id = :parking_lot_id";
+        $prep = $db->prepare($query);
+        $prep->bindValue("parking_lot_id", $id);
+        $prep->execute();
+        $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
+        return count($result);
+    }
+
+    public function deleteParkingLotRequest($id)
+    {
+        $db = SModel::getInstance();
+        $this->query = "DELETE FROM parking_lot WHERE id = :id";
+        $prep = $db->prepare($this->query);
+        $prep->bindValue("id", $id);
+        $prep->execute();
+    }
+
     private function selectByCoords($lat, $lng, $radius)
     {
         if (
