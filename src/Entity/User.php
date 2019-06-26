@@ -60,7 +60,7 @@ class User implements UserInterface
     public function getUserRequest($email)
     {
         $db = SModel::getInstance();
-        $query = "SELECT id, firstname, lastname, password, email, phone FROM user WHERE email = :email";
+        $query = "SELECT id, firstname, lastname, password, email, phone, admin FROM user WHERE email = :email";
         $prep = $db->prepare($query);
         $prep->bindValue("email", $email);
         $prep->execute();

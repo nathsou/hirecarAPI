@@ -41,15 +41,8 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             $request->headers->set("Accept", "application/yaml");
         }
 
-        if ($this->valid_request) {
-            $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
-            return ['parking_lots' => $parking_lots];
-        }
-
-        return [
-            "msg" => 'incorrect parameters',
-            "status" => Response::HTTP_BAD_REQUEST
-        ];
+        $parking_lots = $this->fetchIdData($this->execQuery(), ["airport"]);
+        return ['parking_lots' => $parking_lots];
     }
 
     public function insertParkingLotRequest($label, $lat, $lng, $capacity, $pricePerDay, $airportId)
@@ -92,7 +85,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             isset($lat) && isset($lng) && isset($radius) &&
             is_numeric($lat) && is_numeric($lng) && is_numeric($radius)
         ) {
-            $this->valid_request = true;
             $this->addWhereCondition("(1.852 * 60 * SQRT(POW((:lng - parking_lot.lng) *
                 COS((parking_lot.lat + :lat) / 2), 2) + POW((parking_lot.lat - :lat), 2)) < :radius) ");
             $this->query_parameters[':lng'] = (float)$lng;
@@ -104,13 +96,11 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     private function selectByPrice($price)
     {
         if (isset($price["min"]) && is_numeric($price["min"])) {
-            $this->valid_request = true;
             $this->addWhereCondition("price_per_day >= :min_price ");
             $this->query_parameters['min_price'] = $price["min"];
         }
 
         if (isset($price["max"]) && is_numeric($price["max"])) {
-            $this->valid_request = true;
             $this->addWhereCondition("price_per_day<= :max_price ");
             $this->query_parameters["max_price"] = $price["max"];
         }
@@ -144,7 +134,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
             } catch (\Exception $e) { }
         }
         if ($has_changed) {
-            $this->valid_request = true;
             $condition .= ") ";
             $this->addWhereCondition($condition);
         }
@@ -153,7 +142,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     private function selectByCapacity($min_capacity)
     {
         if (isset($min_capacity) && is_numeric($min_capacity)) {
-            $this->valid_request = true;
             $this->addWhereCondition("capacity >= :min_capacity");
             $this->query_parameters["min_capacity"] = $min_capacity;
         }
@@ -162,7 +150,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     private function selectById($id)
     {
         if (isset($id) && is_numeric($id)) {
-            $this->valid_request = true;
             $this->addWhereCondition("airport_id = :id");
             $this->query_parameters["id"] = $id;
         }
@@ -171,7 +158,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
     private function selectByAirportName($name)
     {
         if (isset($name) && is_string($name)) {
-            $this->valid_request = true;
             $this->addWhereCondition("airport_id IN (SELECT id FROM airport WHERE LOWER(name)
                 LIKE '%" . strtolower($name) . "%')");
             // $this->query_parameters["airport_name"] = $name;
