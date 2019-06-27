@@ -27,6 +27,7 @@ class ParkingLotController extends MediaTypeController
         $pl = new ParkingLot();
         return $this->handleResponse($request, $pl->getParkingLotsRequest($request));
     }
+
     /**
      * parking_lots
      * @Route("/parking_lots",methods={"PUT"})
@@ -59,7 +60,8 @@ class ParkingLotController extends MediaTypeController
                 isset($airport_id) && is_numeric($airport_id)
             ) {
                 $requestDB = new ParkingLot();
-                return $this->handleResponse($request,
+                return $this->handleResponse(
+                    $request,
                     $requestDB->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
                 );
             }

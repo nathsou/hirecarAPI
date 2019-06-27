@@ -51,4 +51,45 @@ class CarRentalController extends MediaTypeController
             "status" => Response::HTTP_BAD_REQUEST
         ]);
     }
+
+    /**
+     * car_rentals
+     * @Route("/car_rentals",methods={"POST"})
+     *  condition="context.getMethod() in ['POST']
+     */
+    public function insertCarRental(Request $request)
+    {
+
+        $data = $this->inputMediaTypeConverter($request);
+
+        if (
+            array_key_exists("start_date", $data)
+            && array_key_exists("end_date", $data)
+            && array_key_exists("user_id", $data)
+            && array_key_exists("parking_spot_id", $data)
+        ) {
+            $start_date = $data["start_date"];
+            $end_date = $data["end_date"];
+            $user_id = $data["user_id"];
+            $parking_spot_id = $data["parking_spot_id"];
+
+            if (
+                isset($start_date) && is_string($start_date) &&
+                isset($end_date) && is_string($end_date) &&
+                isset($user_id) && is_numeric($user_id) &&
+                isset($parking_spot_id) && is_numeric($parking_spot_id)
+            ) {
+                $requestDB = new CarRental();
+                return $this->handleResponse(
+                    $request,
+                    $requestDB->insertCarRentalRequest($start_date, $end_date, $user_id, $parking_spot_id)
+                );
+            }
+        }
+
+        return $this->handleResponse($request, [
+            "msg" => 'invalid input',
+            "status" => Response::HTTP_BAD_REQUEST
+        ]);
+    }
 }

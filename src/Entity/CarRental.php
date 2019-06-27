@@ -133,4 +133,37 @@ class CarRental extends RequestBuilder
         $prep->bindValue("id", $id);
         $prep->execute();
     }
+
+    public function insertCarRentalRequest($start_date, $end_date, $user_id, $parking_spot_id)
+    {
+        $db = SModel::getInstance();
+        $query = "INSERT INTO rent_car (start_date, end_date, user_id, parking_spot_id)
+            VALUES (:start_date, :end_date, :user_id, :parking_spot_id)";
+
+        $prep = $db->prepare($query);
+        $prep->bindValue("start_date", $start_date);
+        $prep->bindValue("end_date", $end_date);
+        $prep->bindValue("user_id", $user_id);
+        $prep->bindValue("parking_spot_id", $parking_spot_id);
+
+        $prep->execute();
+
+        switch ($prep->errorCode()) {
+            case "23000":
+                return [
+                    "msg" => "duplicate car rentals",
+                    "status" => Response::HTTP_CONFLICT
+                ];
+            case "00000":
+                return [
+                    "msg" => "car rental created",
+                    "status" => Response::HTTP_CREATED
+                ];
+            default:
+                return [
+                    "msg" => "invalid input",
+                    "status" => Response::HTTP_BAD_REQUEST
+                ];
+        }
+    }
 }
