@@ -96,6 +96,21 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         return count($result);
     }
 
+    public function updateParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id, $id)
+    {
+        $db = SModel::getInstance();
+        $this->query = "UPDATE parking_lot SET label = :label, lat = :lat, lng = :lng, capacity = :capacity, price_per_day = :price_per_day, airport_id: :airport_id WHERE id = :id";
+        $prep = $db->prepare($this->query);
+        $prep->bindValue("label", $label);
+        $prep->bindValue("lat", $lat);
+        $prep->bindValue("lng", $lng);
+        $prep->bindValue("capacity", $capacity);
+        $prep->bindValue("price_per_day", $price_per_day);
+        $prep->bindValue("airport_id", $airport_id);
+        $prep->bindValue("id", $id);
+        $prep->execute();
+    }
+
     public function deleteParkingLotRequest($id)
     {
         $db = SModel::getInstance();

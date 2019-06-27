@@ -76,6 +76,49 @@ class ParkingLotController extends MediaTypeController
 
     /**
      * parking_lots
+     * @Route("/parking_lots/{id}",methods={"PUT"})
+     * condition="context.getMethod() in ['PUT']
+     */
+    public function updateParkingLot(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        if (
+            array_key_exists("label", $data)
+            && array_key_exists("lat", $data)
+            && array_key_exists("lng", $data)
+            && array_key_exists("capacity", $data)
+            && array_key_exists("price_per_day", $data)
+            && array_key_exists("airport", $data)
+        ) {
+            $label = $data["label"];
+            $lat = $data["lat"];
+            $lng = $data["lng"];
+            $capacity = $data["capacity"];
+            $price_per_day = $data["price_per_day"];
+            $airport_id = $data["airport"]["id"];
+            $id = $request->get('id');
+            if (
+                isset($label) &&
+                isset($lat) && is_numeric($lat) &&
+                isset($lng) && is_numeric($lng) &&
+                isset($capacity) && is_numeric($capacity) &&
+                isset($price_per_day) && is_numeric($price_per_day) &&
+                isset($airport_id) && is_numeric($airport_id) &&
+                isset($id) && is_numeric($id)
+            ) {
+                $pl = new ParkingLot();
+                $pl->updateParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id, $id);
+            }
+            return $this->mediaTypeConverter($request, [
+                "msg" => "parking lot updated",
+                "status" => Response::HTTP_ACCEPTED
+            ]);
+        }
+        return new Response('', Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * parking_lots
      * @Route("/parking_lots/{id}",methods={"DELETE"})
      * condition="context.getMethod() in ['DELETE']
      */
