@@ -155,10 +155,14 @@ class CarRental extends RequestBuilder
                     "status" => Response::HTTP_CONFLICT
                 ];
             case "00000":
-                return [
-                    "msg" => "car rental created",
-                    "status" => Response::HTTP_CREATED
-                ];
+                // return the id of the newly created car rental
+                $this->query = "SELECT id FROM rent_car WHERE
+                                start_date = '" . $start_date . "' AND
+                                end_date = '" . $end_date . "' AND
+                                user_id = " . $user_id . " AND
+                                parking_spot_id = " . $parking_spot_id;
+
+                return $this->execQuery()[0];
             default:
                 return [
                     "msg" => "invalid input",

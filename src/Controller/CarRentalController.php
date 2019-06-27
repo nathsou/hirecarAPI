@@ -80,10 +80,8 @@ class CarRentalController extends MediaTypeController
                 isset($parking_spot_id) && is_numeric($parking_spot_id)
             ) {
                 $requestDB = new CarRental();
-                return $this->handleResponse(
-                    $request,
-                    $requestDB->insertCarRentalRequest($start_date, $end_date, $user_id, $parking_spot_id)
-                );
+
+                return $this->handleResponse($request, $requestDB->insertCarRentalRequest($start_date, $end_date, $user_id, $parking_spot_id));
             }
         }
 

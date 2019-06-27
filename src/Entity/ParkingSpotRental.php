@@ -48,7 +48,6 @@ class ParkingSpotRental extends RequestBuilder
             return $this->execQuery()[0];
         } else {
             return [
-                "error" => true,
                 "msg" => "incorrect parameters",
                 "status" => Response::HTTP_BAD_REQUEST
             ];
@@ -57,7 +56,7 @@ class ParkingSpotRental extends RequestBuilder
 
     public function getParkingSpotRentalsRequest(Request $request)
     {
-        $this->query = "SELECT * FROM rent_parking_spot";
+        $this->query = "SELECT * FROM rent_parking_spot as s";
 
         $this->selectByDate(
             $request->query->get("start_date"),
@@ -89,19 +88,12 @@ class ParkingSpotRental extends RequestBuilder
     private function selectByDate($start, $end)
     {
 
-        if (isset($start) && is_string($start)) {
+        if (isset($start) && is_string($start) && isset($end) && is_string($end)) {
             try {
                 $Date2 = new \DateTime($start);
                 $this->query_parameters["start_date"] = $Date2->format("y-m-d H:i");
-                $this->addWhereCondition("start_date >= :start_date");
-                $this->valid_request = true;
-            } catch (\Exception $e) { }
-        }
-
-        if (isset($end) && is_string($end)) {
-            try {
+                $this->addWhereCondition("start_date <= :start_date AND end_date >= :end_date AND NOT EXISTS (SELECT id FROM rent_car as r WHERE r.parking_spot_id = s.id AND :start_date <= r.start_date AND :end_date >= r.end_date)");
                 $date = new \DateTime($end);
-                $this->addWhereCondition("end_date <= :end_date");
                 $this->query_parameters["end_date"] = $date->format("y-m-d H:i");
                 $this->valid_request = true;
             } catch (\Exception $e) { }
