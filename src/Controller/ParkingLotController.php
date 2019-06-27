@@ -59,13 +59,11 @@ class ParkingLotController extends MediaTypeController
                 isset($airport_id) && is_numeric($airport_id)
             ) {
                 $pl = new ParkingLot();
-                // return $this->handleResponse(
-                //     $request,
-                //     $pl->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
-                // );
-                $pl->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id);
-                $id = $pl->selectInsertedParkingLotIdRequest();
-                return new Response('{"id": "' . $id . '"}', Response::HTTP_OK);
+                $res = $pl->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id);
+                if ($res["status"] === 201) {
+                    $id = $pl->selectInsertedParkingLotIdRequest();
+                    return new Response('{"id": "' . $id . '"}', Response::HTTP_OK);
+                }
             }
         }
 
