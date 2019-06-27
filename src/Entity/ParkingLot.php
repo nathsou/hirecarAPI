@@ -57,7 +57,6 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
         $prep->bindValue("capacity", $capacity);
         $prep->bindValue("price_per_day", $pricePerDay);
         $prep->bindValue("airport_id", $airportId);
-
         $prep->execute();
 
         switch ($prep->errorCode()) {
@@ -77,6 +76,13 @@ class ParkingLot extends RequestBuilder implements ParkingLotInterface
                     "status" => Response::HTTP_BAD_REQUEST
                 ];
         }
+    }
+
+    public function selectInsertedParkingLotIdRequest()
+    {
+        $this->query = "SELECT id FROM parking_lot WHERE id = (SELECT MAX(id) FROM parking_lot)";
+        $result = $this->execQuery();
+        return $result[0]["id"];
     }
 
     public function checkParkingSpotRental($id)

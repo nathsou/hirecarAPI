@@ -29,8 +29,8 @@ class ParkingLotController extends MediaTypeController
     }
     /**
      * parking_lots
-     * @Route("/parking_lots",methods={"PUT"})
-     *  condition="context.getMethod() in ['PUT']
+     * @Route("/parking_lots",methods={"POST"})
+     *  condition="context.getMethod() in ['POST']
      */
     public function insertParkingLot(Request $request)
     {
@@ -42,14 +42,14 @@ class ParkingLotController extends MediaTypeController
             && array_key_exists("lng", $data)
             && array_key_exists("capacity", $data)
             && array_key_exists("price_per_day", $data)
-            && array_key_exists("airport_id", $data)
+            && array_key_exists("airport", $data)
         ) {
             $label = $data["label"];
             $lat = $data["lat"];
             $lng = $data["lng"];
             $capacity = $data["capacity"];
             $price_per_day = $data["price_per_day"];
-            $airport_id = $data["airport_id"];
+            $airport_id = $data["airport"]["id"];
             if (
                 isset($label) &&
                 isset($lat) && is_numeric($lat) &&
@@ -58,11 +58,14 @@ class ParkingLotController extends MediaTypeController
                 isset($price_per_day) && is_numeric($price_per_day) &&
                 isset($airport_id) && is_numeric($airport_id)
             ) {
-                $requestDB = new ParkingLot();
-                return $this->handleResponse(
-                    $request,
-                    $requestDB->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
-                );
+                $pl = new ParkingLot();
+                // return $this->handleResponse(
+                //     $request,
+                //     $pl->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id)
+                // );
+                $pl->insertParkingLotRequest($label, $lat, $lng, $capacity, $price_per_day, $airport_id);
+                $id = $pl->selectInsertedParkingLotIdRequest();
+                return new Response('{"id": "' . $id . '"}', Response::HTTP_OK);
             }
         }
 
